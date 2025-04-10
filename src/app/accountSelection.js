@@ -35,7 +35,7 @@ export default function AccountSelection() {
               className="hidden"
               onChange={() => setSelected("employer")} 
             />
-            <img src="https://via.placeholder.com/50" alt="Employer" className="w-12 h-12 rounded-md mr-3"/>
+            {/* <img src="https://via.placeholder.com/50" alt="Employer" className="w-12 h-12 rounded-md mr-3"/> */}
             <div>
               <span className="font-semibold">Employer</span>
               <p className="text-gray-500 text-sm">I am looking for candidates</p>

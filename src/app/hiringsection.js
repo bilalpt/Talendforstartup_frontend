@@ -2,7 +2,6 @@
 
 import Image from 'next/image';
 
-
 export default function HiringSection() {
   return (
     <div className="flex flex-col items-center justify-between px-6 lg:px-56 py-16 bg-white">
@@ -22,8 +21,12 @@ export default function HiringSection() {
           </p>
         </div>
         <div>
-          <Image src="/images/Resumeamico.svg"
-            alt="Hiring Illustration" width={400} height={300} />
+          <Image
+            src="/images/Resumeamico.svg"
+            alt="Hiring Illustration"
+            width={400}
+            height={300}
+          />
         </div>
       </div>
 
@@ -33,17 +36,20 @@ export default function HiringSection() {
           {
             step: '1',
             title: 'Create your free account',
-            description: 'All you need is your email address to create an account and start building your job post.',
+            description:
+              'All you need is your email address to create an account and start building your job post.',
           },
           {
             step: '2',
             title: 'Build your job post',
-            description: 'Then just add a title, description and location to your job post, and you\'re ready to go.',
+            description:
+              'Then just add a title, description and location to your job post, and you&apos;re ready to go.',
           },
           {
             step: '3',
             title: 'Post your job',
-            description: 'After you post your job, use our state-of-the-art tools to help you find dream talent.',
+            description:
+              'After you post your job, use our state-of-the-art tools to help you find dream talent.',
           },
         ].map(({ step, title, description }) => (
           <div key={step} className="p-6 border rounded-lg shadow-md bg-white text-center">

@@ -68,7 +68,9 @@ export default function EmployerForm() {
                 className="w-full px-4 py-2 focus:outline-none"
               />
             </div>
-            <p className="text-sm text-gray-500 mt-1">For account management communication. Not visible to jobseekers.</p>
+            <p className="text-sm text-gray-500 mt-1">
+              For account management communication. Not visible to jobseekers.
+            </p>
           </div>
           {/* Buttons Section */}
           <div className="flex justify-between items-center mt-6">
@@ -76,7 +78,7 @@ export default function EmployerForm() {
               type="button"
               className="flex items-center bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 transition"
             >
-              <span className="mr-2">⬅</span> I'm looking for a job
+              <span className="mr-2">⬅</span> I&apos;m looking for a job
             </button>
             <button
               type="submit"

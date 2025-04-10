@@ -14,12 +14,11 @@ import {
   Plus,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-
-
-
+import Image from 'next/image'; // ✅ Import Image from Next.js
 
 export default function Dashboard() {
   const [isOpen, setIsOpen] = useState(true);
+  const route = useRouter();
 
   const navItems = [
     { icon: <Briefcase />, label: 'Jobs' },
@@ -30,8 +29,6 @@ export default function Dashboard() {
     { icon: <BarChart2 />, label: 'Analytics' },
     { icon: <FolderPlus />, label: 'Tools' },
   ];
-  
-  const route=useRouter()
 
   return (
     <div className="flex min-h-screen">
@@ -48,10 +45,9 @@ export default function Dashboard() {
         {/* Create New Button */}
         <div className="w-full mb-6">
           <li
-            className={`flex items-center gap-3 px-3 py-2 rounded 
+            className="flex items-center gap-3 px-3 py-2 rounded 
               bg-white text-black font-bold cursor-pointer hover:bg-gray-200 transition-all
-              justify-start
-            `}
+              justify-start"
           >
             <span><Plus className="text-black" /></span>
             {isOpen && <span>Create New</span>}
@@ -103,21 +99,28 @@ export default function Dashboard() {
         </section>
 
         {/* Empty State */}
-        <section className="text-center ">
+        <section className="text-center">
           <div className="flex justify-center">
-            <img
+            {/* ✅ Optimized Image Component */}
+            <Image
               src="/hrsideimages/laptopwithboy.svg"
               alt="Illustration"
-              className="w-[350px] h-[350px] object-contain"
+              width={350}
+              height={350}
+              className="object-contain"
+              priority
             />
           </div>
-          <p className="text-lg font-semibold ">
+          <p className="text-lg font-semibold">
             Get up to 4x more applications. Post your first job directly on Indeed.
           </p>
           <p className="text-sm text-gray-600 mt-2 max-w-xl mx-auto">
             Indeed Apply brings you up to four times more applications than redirecting applications to your career website. Make it simpler. Hire faster.
           </p>
-          <button onClick={()=>route.push('/hruserside/employeeaccountsecond')} className="mt-6 bg-blue-600 text-white px-6 py-2 rounded">
+          <button
+            onClick={() => route.push('/hruserside/employeeaccountsecond')}
+            className="mt-6 bg-blue-600 text-white px-6 py-2 rounded"
+          >
             Post a job
           </button>
         </section>
