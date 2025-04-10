@@ -2,9 +2,8 @@
 
 import React, { useState } from "react";
 import { Bookmark, MoreVertical } from "lucide-react";
-import Image from "next/image"; // 
+import Image from "next/image"; 
 import Navbar from "@/app/(employee)/navbar/page";
-
 
 const jobList = [
   {
@@ -57,7 +56,8 @@ const EmployeHome = () => {
 
   return (
     <div className="flex flex-col h-screen bg-gray-50">
-      <Navbar/>
+      <Navbar />
+
       {/* Search Bar */}
       <div className="flex items-center justify-center gap-2 p-4">
         <div className="flex items-center bg-gray-100 rounded-full px-4 py-2 w-full max-w-xl">
@@ -96,10 +96,12 @@ const EmployeHome = () => {
               }`}
             >
               {job.logo && (
-                <img
+                <Image
                   src={job.logo}
                   alt={job.company}
-                  className="w-10 h-10 rounded self-start"
+                  width={40}
+                  height={40}
+                  className="rounded self-start"
                 />
               )}
               <div className="flex flex-col justify-between flex-grow overflow-hidden">
@@ -117,7 +119,9 @@ const EmployeHome = () => {
                     <div className="text-sm text-gray-400">{job.posted}</div>
                   </div>
                   {job.easyApply && (
-                    <p className="text-green-600 text-sm mt-2 font-medium">⚡ Easy Apply</p>
+                    <p className="text-green-600 text-sm mt-2 font-medium">
+                      ⚡ Easy Apply
+                    </p>
                   )}
                 </div>
               </div>
@@ -134,10 +138,12 @@ const EmployeHome = () => {
                 <div>
                   <div className="flex items-center gap-2">
                     {selectedJob.logo && (
-                      <img
+                      <Image
                         src={selectedJob.logo}
                         alt={selectedJob.company}
-                        className="w-10 h-10 rounded"
+                        width={40}
+                        height={40}
+                        className="rounded"
                       />
                     )}
                     <div>
