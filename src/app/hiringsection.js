@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import Resumeamico from '../app/images/Resumeamico.svg';
+
 
 export default function HiringSection() {
   return (
@@ -22,7 +22,8 @@ export default function HiringSection() {
           </p>
         </div>
         <div>
-          <Image src={Resumeamico} alt="Hiring Illustration" width={400} height={300} />
+          <Image src="/images/Resumeamico.svg"
+            alt="Hiring Illustration" width={400} height={300} />
         </div>
       </div>
 
