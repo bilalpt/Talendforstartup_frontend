@@ -1,4 +1,5 @@
 'use client';
+
 import { useSearchParams, useRouter } from 'next/navigation';
 import { PencilIcon, ArrowRightIcon } from '@heroicons/react/24/solid';
 
@@ -14,7 +15,7 @@ export default function JobFormDetails() {
   return (
     <div className="max-w-4xl mx-auto bg-white p-10 mt-14 shadow-2xl rounded-3xl border border-gray-200">
       <h1 className="text-4xl font-extrabold text-gray-900 mb-8">Job Overview</h1>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-10 text-gray-800 text-[17px] leading-relaxed">
         <p><span className="font-semibold">Company Name:</span> {getValue('companyName')}</p>
         <p><span className="font-semibold">Company Description:</span> {getValue('companyDescription')}</p>
