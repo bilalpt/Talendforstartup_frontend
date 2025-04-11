@@ -9,6 +9,7 @@ import JobSection from "./jobsection";
 import EmployerForm from "./employerform";
 import Navbar from "./(employee)/navbar/page";
 import AccountSelection from "./accountSelection";
+import EmployeHome from "./emplyeehomepage/employehome/page";
 
 
 export default function Home() {
@@ -71,12 +72,8 @@ export default function Home() {
 
 
     <div>
-        <div>
-          <JobSection />
-        </div>
-        <div>
-          <EmployerForm />
-        </div>
+      <EmployeHome/>
+
       </div> 
 
   );
