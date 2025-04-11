@@ -1,9 +1,15 @@
+// /app/hruserside/jobformdetails/JobFormDetails.jsx
+'use client';
+
+import { useSearchParams } from 'next/navigation';
+import Image from 'next/image';
 import { SiGoogle, SiApple } from 'react-icons/si';
 import { FaComments, FaClipboardList, FaBuilding, FaMoneyBillWave } from 'react-icons/fa';
 import Navbar from '../(employee)/navbar/page';
-import Image from 'next/image';
 
-export default function Homepagesignup() {
+export default function JobFormDetails() {
+  const searchParams = useSearchParams(); // example usage
+
   return (
     <div>
       <Navbar />
