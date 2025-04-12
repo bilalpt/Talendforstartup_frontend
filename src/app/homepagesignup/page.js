@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { SiGoogle, SiApple } from 'react-icons/si';
 import { FaComments, FaClipboardList, FaBuilding, FaMoneyBillWave } from 'react-icons/fa';
-import Navbar from '../(employee)/navbar/page';
+import Navbar from '../(navbar)/navbar/page';
 
 // Component that uses useSearchParams
 function HomepageSignupContent() {

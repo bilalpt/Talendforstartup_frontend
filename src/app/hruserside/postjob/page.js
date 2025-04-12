@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
-import Navbar from '@/app/(employee)/navbar/page';
+import Navbar from '@/app/(navbar)/navbar/page';
 import { useRouter } from 'next/navigation';
 
 const Postjobnavigate = () => {

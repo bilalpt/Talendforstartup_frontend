@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { Bookmark, MoreVertical } from "lucide-react";
 import Image from "next/image"; 
-import Navbar from "@/app/(employee)/navbar/page";
+import Navbar from "@/app/(navbar)/navbar/page";
 
 const jobList = [
   {

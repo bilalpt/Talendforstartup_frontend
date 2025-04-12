@@ -1,6 +1,6 @@
 import React from 'react'
 import Image from 'next/image'
-import Navbar from '../(employee)/navbar/page';
+import Navbar from '../../(navbar)/navbar/page';
 
 const companies = [
   {

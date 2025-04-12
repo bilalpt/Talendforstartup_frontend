@@ -13,7 +13,7 @@ export default function JobSection() {
       <div className="bg-white rounded-lg shadow-lg p-6 text-center max-w-xs md:max-w-sm">
         <Image src='/images/Jobhuntamico.svg' alt="Looking for a job?" width={300} height={200} className="mx-auto" />
         <h2 className="text-xl font-semibold mt-4">Looking for a job?</h2>
-        <button onClick={()=>router.push('/emplyeehomepage/employehome')} className="mt-4 px-6 py-2 border border-blue-600 text-blue-600 rounded-lg font-medium hover:bg-blue-100">
+        <button onClick={()=>router.push('/employeeuserside/emplyeehomepage/employehome')} className="mt-4 px-6 py-2 border border-blue-600 text-blue-600 rounded-lg font-medium hover:bg-blue-100">
           Find jobs
         </button>
       </div>
