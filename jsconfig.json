@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",  // Specifies the base directory for resolving non-relative paths.
     "paths": {
       "@/*": ["./src/*"]
     }
