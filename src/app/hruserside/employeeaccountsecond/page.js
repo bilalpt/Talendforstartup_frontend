@@ -17,6 +17,8 @@ export default function JobBasicsForm() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -63,9 +65,11 @@ export default function JobBasicsForm() {
       console.log(result, 'Response from API');
       
       if (!response.ok) {
-        alert(`❌ Error: ${result.message}`);
+        setErrorMessage(`❌ Error: ${result.message}`);
+        setSuccessMessage('');
       } else {
-        alert('✅ Job created successfully!');
+        setErrorMessage('');
+        setSuccessMessage('✅ Job created successfully!');
         console.log('Result:', result);
 
         // Reset form after successful submission
@@ -85,7 +89,8 @@ export default function JobBasicsForm() {
       }
     } catch (err) {
       console.error('🚨 Error:', err);
-      alert('An error occurred while submitting the job.');
+      setErrorMessage('An error occurred while submitting the job.');
+      setSuccessMessage('');
     } finally {
       setIsSubmitting(false);
     }
@@ -94,6 +99,11 @@ export default function JobBasicsForm() {
   return (
     <div className="max-w-4xl mx-auto bg-white p-8 shadow-2xl rounded-lg">
       <h1 className="text-3xl font-semibold text-gray-800 mb-6">Job Basics</h1>
+
+      {/* Success/Error Message */}
+      {successMessage && <div className="text-green-500 font-medium mb-4">{successMessage}</div>}
+      {errorMessage && <div className="text-red-500 font-medium mb-4">{errorMessage}</div>}
+
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
           <label htmlFor="companyName" className="block text-sm font-medium text-gray-700">
