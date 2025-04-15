@@ -43,7 +43,8 @@ export default function JobBasicsForm() {
     try {
       setIsSubmitting(true);
 
-      // 🟡 Replace with your actual API endpoint
+      console.log('Submitting job form...');
+      
       const response = await fetch('https://talent4startup.onrender.com/jobs/create', {
         method: 'POST',
         headers: {
@@ -53,7 +54,8 @@ export default function JobBasicsForm() {
       });
 
       const result = await response.json();
-
+      console.log(result, 'Response from API');
+      
       if (!response.ok) {
         alert(`❌ Error: ${result.message}`);
       } else {
