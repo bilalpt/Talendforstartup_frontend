@@ -15,6 +15,8 @@ export default function JobBasicsForm() {
     streetAddress: '',
   });
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -26,9 +28,23 @@ export default function JobBasicsForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Simple client-side validation
+    if (
+      !formData.companyName ||
+      !formData.jobTitle ||
+      !formData.jobDescription ||
+      !formData.salary ||
+      !formData.city
+    ) {
+      alert('Please fill all required fields!');
+      return;
+    }
+
     try {
-      // 🟡 Auth token logic disabled temporarily
-      const response = await fetch('/api/jobs/create', {
+      setIsSubmitting(true);
+
+      // 🟡 Replace with your actual API endpoint
+      const response = await fetch('https://talent4startup.onrender.com/jobs/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -44,7 +60,7 @@ export default function JobBasicsForm() {
         alert('✅ Job created successfully!');
         console.log('Result:', result);
 
-        // Reset form
+        // Reset form after successful submission
         setFormData({
           companyName: '',
           companyDescription: '',
@@ -61,6 +77,8 @@ export default function JobBasicsForm() {
     } catch (err) {
       console.error('🚨 Error:', err);
       alert('An error occurred while submitting the job.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -93,7 +111,6 @@ export default function JobBasicsForm() {
             name="companyDescription"
             value={formData.companyDescription}
             onChange={handleChange}
-            required
             placeholder="Introduce your company: business, culture, market position..."
             rows="4"
             className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm p-3"
@@ -223,9 +240,10 @@ export default function JobBasicsForm() {
         <div>
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-3 px-4 rounded-md hover:bg-blue-700 transition duration-200"
+            disabled={isSubmitting}
+            className={`w-full ${isSubmitting ? 'bg-gray-500' : 'bg-blue-600'} text-white py-3 px-4 rounded-md hover:bg-blue-700 transition duration-200`}
           >
-            Submit
+            {isSubmitting ? 'Submitting...' : 'Submit'}
           </button>
         </div>
       </form>
