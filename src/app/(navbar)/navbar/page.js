@@ -53,7 +53,7 @@ const Navbar = () => {
           {dropdownOpen && (
             <div className="absolute right-0 mt-2 w-48 bg-white border-b-black border-gray-200 shadow-lg rounded-xl z-10 overflow-hidden ">
               <Link
-                href="/profile"
+                href="/employeeuserside/profile"
                 className="flex items-center gap-2 px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors duration-200"
               >
                 <svg

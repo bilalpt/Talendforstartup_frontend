@@ -23,17 +23,51 @@ export default function JobBasicsForm() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Job Data:', formData);
+
+    try {
+      // 🟡 Auth token logic disabled temporarily
+      const response = await fetch('/api/jobs/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        alert(`❌ Error: ${result.message}`);
+      } else {
+        alert('✅ Job created successfully!');
+        console.log('Result:', result);
+
+        // Reset form
+        setFormData({
+          companyName: '',
+          companyDescription: '',
+          jobTitle: '',
+          jobDescription: '',
+          salary: '',
+          locationType: 'On-site',
+          city: '',
+          area: '',
+          pincode: '',
+          streetAddress: '',
+        });
+      }
+    } catch (err) {
+      console.error('🚨 Error:', err);
+      alert('An error occurred while submitting the job.');
+    }
   };
 
   return (
     <div className="max-w-4xl mx-auto bg-white p-8 shadow-2xl rounded-lg">
       <h1 className="text-3xl font-semibold text-gray-800 mb-6">Job Basics</h1>
       <form onSubmit={handleSubmit} className="space-y-6">
-
-        {/* Company Name */}
         <div>
           <label htmlFor="companyName" className="block text-sm font-medium text-gray-700">
             Company Name <span className="text-red-500">*</span>
@@ -44,13 +78,12 @@ export default function JobBasicsForm() {
             name="companyName"
             value={formData.companyName}
             onChange={handleChange}
-            placeholder="Eg: Rainbow Graphix Pvt Ltd"
             required
-            className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm p-3 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Eg: Rainbow Graphix Pvt Ltd"
+            className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm p-3"
           />
         </div>
 
-        {/* Company Description */}
         <div>
           <label htmlFor="companyDescription" className="block text-sm font-medium text-gray-700">
             Company Description
@@ -60,14 +93,13 @@ export default function JobBasicsForm() {
             name="companyDescription"
             value={formData.companyDescription}
             onChange={handleChange}
+            required
             placeholder="Introduce your company: business, culture, market position..."
             rows="4"
-            className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm p-3 focus:ring-blue-500 focus:border-blue-500"
-            required
+            className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm p-3"
           />
         </div>
 
-        {/* Job Title */}
         <div>
           <label htmlFor="jobTitle" className="block text-sm font-medium text-gray-700">
             Job Title <span className="text-red-500">*</span>
@@ -79,11 +111,10 @@ export default function JobBasicsForm() {
             value={formData.jobTitle}
             onChange={handleChange}
             required
-            className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm p-3 focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm p-3"
           />
         </div>
 
-        {/* Job Description */}
         <div>
           <label htmlFor="jobDescription" className="block text-sm font-medium text-gray-700">
             Job Description <span className="text-red-500">*</span>
@@ -93,14 +124,13 @@ export default function JobBasicsForm() {
             name="jobDescription"
             value={formData.jobDescription}
             onChange={handleChange}
-            placeholder="Describe the role and responsibilities..."
-            rows="4"
             required
-            className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm p-3 focus:ring-blue-500 focus:border-blue-500"
+            rows="4"
+            placeholder="Describe the role and responsibilities..."
+            className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm p-3"
           />
         </div>
 
-        {/* Salary */}
         <div>
           <label htmlFor="salary" className="block text-sm font-medium text-gray-700">
             Salary (Per Month) <span className="text-red-500">*</span>
@@ -113,11 +143,10 @@ export default function JobBasicsForm() {
             onChange={handleChange}
             placeholder="Eg: ₹30,000"
             required
-            className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm p-3 focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm p-3"
           />
         </div>
 
-        {/* Location Type */}
         <div>
           <label htmlFor="locationType" className="block text-sm font-medium text-gray-700">
             Job Location Type <span className="text-red-500">*</span>
@@ -127,7 +156,7 @@ export default function JobBasicsForm() {
             name="locationType"
             value={formData.locationType}
             onChange={handleChange}
-            className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm p-3 focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm p-3"
           >
             <option>On-site</option>
             <option>Remote</option>
@@ -135,7 +164,6 @@ export default function JobBasicsForm() {
           </select>
         </div>
 
-        {/* Address Fields */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label htmlFor="city" className="block text-sm font-medium text-gray-700">
@@ -148,7 +176,7 @@ export default function JobBasicsForm() {
               value={formData.city}
               onChange={handleChange}
               required
-              className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm p-3 focus:ring-blue-500 focus:border-blue-500"
+              className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm p-3"
             />
           </div>
           <div>
@@ -161,7 +189,7 @@ export default function JobBasicsForm() {
               name="area"
               value={formData.area}
               onChange={handleChange}
-              className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm p-3 focus:ring-blue-500 focus:border-blue-500"
+              className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm p-3"
             />
           </div>
           <div>
@@ -174,7 +202,7 @@ export default function JobBasicsForm() {
               name="pincode"
               value={formData.pincode}
               onChange={handleChange}
-              className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm p-3 focus:ring-blue-500 focus:border-blue-500"
+              className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm p-3"
             />
           </div>
           <div>
@@ -187,12 +215,11 @@ export default function JobBasicsForm() {
               name="streetAddress"
               value={formData.streetAddress}
               onChange={handleChange}
-              className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm p-3 focus:ring-blue-500 focus:border-blue-500"
+              className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm p-3"
             />
           </div>
         </div>
 
-        {/* Submit Button */}
         <div>
           <button
             type="submit"
