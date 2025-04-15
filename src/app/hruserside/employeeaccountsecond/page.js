@@ -16,6 +16,7 @@ export default function JobBasicsForm() {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,24 +26,29 @@ export default function JobBasicsForm() {
     }));
   };
 
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.companyName) newErrors.companyName = 'Company name is required.';
+    if (!formData.jobTitle) newErrors.jobTitle = 'Job title is required.';
+    if (!formData.jobDescription) newErrors.jobDescription = 'Job description is required.';
+    if (!formData.salary) newErrors.salary = 'Salary is required.';
+    if (!formData.city) newErrors.city = 'City is required.';
+    if (formData.salary && isNaN(formData.salary)) newErrors.salary = 'Salary must be a valid number.';
+    if (formData.pincode && !/^\d{6}$/.test(formData.pincode)) newErrors.pincode = 'Pincode must be 6 digits.';
+    return newErrors;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Simple client-side validation
-    if (
-      !formData.companyName ||
-      !formData.jobTitle ||
-      !formData.jobDescription ||
-      !formData.salary ||
-      !formData.city
-    ) {
-      alert('Please fill all required fields!');
+    const formErrors = validateForm();
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors);
       return;
     }
 
     try {
       setIsSubmitting(true);
-
       console.log('Submitting job form...');
       
       const response = await fetch('https://talent4startup.onrender.com/jobs/create', {
@@ -75,6 +81,7 @@ export default function JobBasicsForm() {
           pincode: '',
           streetAddress: '',
         });
+        setErrors({});
       }
     } catch (err) {
       console.error('🚨 Error:', err);
@@ -100,8 +107,9 @@ export default function JobBasicsForm() {
             onChange={handleChange}
             required
             placeholder="Eg: Rainbow Graphix Pvt Ltd"
-            className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm p-3"
+            className={`mt-1 block w-full rounded-md border ${errors.companyName ? 'border-red-500' : 'border-gray-300'} shadow-sm p-3`}
           />
+          {errors.companyName && <p className="text-red-500 text-sm">{errors.companyName}</p>}
         </div>
 
         <div>
@@ -130,8 +138,9 @@ export default function JobBasicsForm() {
             value={formData.jobTitle}
             onChange={handleChange}
             required
-            className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm p-3"
+            className={`mt-1 block w-full rounded-md border ${errors.jobTitle ? 'border-red-500' : 'border-gray-300'} shadow-sm p-3`}
           />
+          {errors.jobTitle && <p className="text-red-500 text-sm">{errors.jobTitle}</p>}
         </div>
 
         <div>
@@ -146,8 +155,9 @@ export default function JobBasicsForm() {
             required
             rows="4"
             placeholder="Describe the role and responsibilities..."
-            className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm p-3"
+            className={`mt-1 block w-full rounded-md border ${errors.jobDescription ? 'border-red-500' : 'border-gray-300'} shadow-sm p-3`}
           />
+          {errors.jobDescription && <p className="text-red-500 text-sm">{errors.jobDescription}</p>}
         </div>
 
         <div>
@@ -162,8 +172,9 @@ export default function JobBasicsForm() {
             onChange={handleChange}
             placeholder="Eg: ₹30,000"
             required
-            className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm p-3"
+            className={`mt-1 block w-full rounded-md border ${errors.salary ? 'border-red-500' : 'border-gray-300'} shadow-sm p-3`}
           />
+          {errors.salary && <p className="text-red-500 text-sm">{errors.salary}</p>}
         </div>
 
         <div>
@@ -195,8 +206,9 @@ export default function JobBasicsForm() {
               value={formData.city}
               onChange={handleChange}
               required
-              className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm p-3"
+              className={`mt-1 block w-full rounded-md border ${errors.city ? 'border-red-500' : 'border-gray-300'} shadow-sm p-3`}
             />
+            {errors.city && <p className="text-red-500 text-sm">{errors.city}</p>}
           </div>
           <div>
             <label htmlFor="area" className="block text-sm font-medium text-gray-700">
@@ -221,8 +233,9 @@ export default function JobBasicsForm() {
               name="pincode"
               value={formData.pincode}
               onChange={handleChange}
-              className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm p-3"
+              className={`mt-1 block w-full rounded-md border ${errors.pincode ? 'border-red-500' : 'border-gray-300'} shadow-sm p-3`}
             />
+            {errors.pincode && <p className="text-red-500 text-sm">{errors.pincode}</p>}
           </div>
           <div>
             <label htmlFor="streetAddress" className="block text-sm font-medium text-gray-700">
@@ -243,9 +256,9 @@ export default function JobBasicsForm() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className={`w-full ${isSubmitting ? 'bg-gray-500' : 'bg-blue-600'} text-white py-3 px-4 rounded-md hover:bg-blue-700 transition duration-200`}
+            className={`w-full ${isSubmitting ? 'bg-gray-400' : 'bg-blue-600'} text-white py-3 rounded-md text-lg`}
           >
-            {isSubmitting ? 'Submitting...' : 'Submit'}
+            {isSubmitting ? 'Submitting...' : 'Submit Job'}
           </button>
         </div>
       </form>
