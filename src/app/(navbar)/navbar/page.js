@@ -72,7 +72,7 @@ const Navbar = () => {
                 Profile
               </Link>
               <Link
-                href="/myjobs"
+                href="/employeeuserside/myjobs"
                 className="flex items-center gap-2 px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors duration-200"
               >
                 <svg
@@ -90,6 +90,26 @@ const Navbar = () => {
                 </svg>
                 My Jobs
               </Link>
+              <Link
+                href="/logout"
+                className="flex items-center gap-2 px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 transition-colors duration-200"
+              >
+                <svg
+                  className="w-5 h-5 text-gray-500"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6A2.25 2.25 0 005.25 5.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m4.5-3h-9m9 0l-3-3m3 3l-3 3"
+                  />
+                </svg>
+                Log out
+              </Link>
+
             </div>
 
           )}
