@@ -65,12 +65,18 @@ export default function SignupPage() {
       });
 
       const data = await response.json();
-      console.log(data,'hello this is working');
-      
+      console.log(data, 'OTP response');
 
       if (response.ok) {
+        // Save token
+        localStorage.setItem('token', data.token );
         setStatus('success');
-        setMessage('OTP verified successfully.');
+        setMessage('OTP verified successfully. Redirecting...');
+
+        // Redirect to home page
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 1500);
       } else {
         setStatus('error');
         setMessage(data.message || 'Invalid OTP or something went wrong.');

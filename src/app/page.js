@@ -9,11 +9,6 @@ import EmployeHome from "./employeeuserside/emplyeehomepage/employehome/page";
 
 export default function Home() {
   return (
-
- 
-
-
-
     <div>
       <EmployeHome/>
       </div> 
