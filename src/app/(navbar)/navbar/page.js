@@ -17,7 +17,6 @@ const Navbar = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token);
-    console.log(token, 'token www');
   }, []);
 
   // Close dropdown if clicked outside
@@ -109,7 +108,7 @@ const Navbar = () => {
 
         <span className="border-l h-6"></span>
         <Link href="/hruserside/postjob">
-          <span className="text-blue-700 cursor-pointer">Employers / Post Job</span>
+          <span className="text-[#CD0A1A] cursor-pointer">Employers / Post Job</span>
         </Link>
       </div>
     </nav>

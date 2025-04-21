@@ -29,48 +29,46 @@ export default function QualificationsForm() {
   };
 
   return (
-    <section className="max-w-3xl mx-auto my-10 p-6 sm:p-10 bg-white border border-gray-200 shadow-xl rounded-xl">
-      <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-8 text-center">
-        📝 Submit Your Qualifications
+    <section className="max-w-3xl mx-auto my-12 p-8 sm:p-10 bg-white border border-gray-300 shadow-2xl rounded-lg">
+      <h1 className="text-3xl sm:text-4xl font-semibold text-center text-[#CD0A1A] mb-10">
+        Qualifications Form
       </h1>
 
-      <form onSubmit={handleSubmit} className="space-y-8">
+      <form onSubmit={handleSubmit} className="space-y-10">
 
-        <Section title="💼 Work Experience">
+        <Section title="Work Experience">
           <InputField label="Job Title" value={formData.work.title} onChange={(val) => handleChange('work', 'title', val)} />
           <InputField label="Company" value={formData.work.company} onChange={(val) => handleChange('work', 'company', val)} />
           <InputField label="Duration" value={formData.work.duration} onChange={(val) => handleChange('work', 'duration', val)} />
         </Section>
 
-        <Section title="🎓 Education">
+        <Section title="Education">
           <InputField label="Degree" value={formData.education.degree} onChange={(val) => handleChange('education', 'degree', val)} />
           <InputField label="Institution" value={formData.education.institution} onChange={(val) => handleChange('education', 'institution', val)} />
           <InputField label="Year" value={formData.education.year} onChange={(val) => handleChange('education', 'year', val)} />
         </Section>
 
-        <Section title="🛠️ Skills">
+        <Section title="Skills">
           <InputField label="Skill Name" value={formData.skill.name} onChange={(val) => handleChange('skill', 'name', val)} />
           <InputField label="Proficiency Level" value={formData.skill.level} onChange={(val) => handleChange('skill', 'level', val)} />
         </Section>
 
-
-
-        <Section title="🏅 Certifications">
+        <Section title="Certifications">
           <InputField label="Certificate Name" value={formData.cert.name} onChange={(val) => handleChange('cert', 'name', val)} />
           <InputField label="Organization" value={formData.cert.org} onChange={(val) => handleChange('cert', 'org', val)} />
         </Section>
 
-        <Section title="🌐 Languages">
+        <Section title="Languages">
           <InputField label="Language" value={formData.lang.name} onChange={(val) => handleChange('lang', 'name', val)} />
           <InputField label="Fluency Level" value={formData.lang.level} onChange={(val) => handleChange('lang', 'level', val)} />
         </Section>
 
-        <div className="pt-6 text-center">
+        <div className="text-center">
           <button
             type="submit"
-            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg shadow-md transition duration-300"
+            className="bg-[#CD0A1A] hover:bg-[#a50915] text-white font-semibold py-3 px-10 rounded-md transition duration-300 shadow-sm"
           >
-            🚀 Submit
+            Submit
           </button>
         </div>
       </form>
@@ -80,11 +78,11 @@ export default function QualificationsForm() {
 
 function InputField({ label, value, onChange }) {
   return (
-    <div>
-      <label className="block text-sm text-blue-900 font-medium mb-1">{label}</label>
+    <div className="mb-4">
+      <label className="block text-sm font-medium text-[#555454] mb-1">{label}</label>
       <input
         type="text"
-        className="w-full px-4 py-2 border border-blue-200 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+        className="w-full px-4 py-2 border border-[#ccc] rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#CD0A1A] focus:border-[#CD0A1A] text-sm"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={`Enter ${label.toLowerCase()}`}
@@ -95,9 +93,9 @@ function InputField({ label, value, onChange }) {
 
 function Section({ title, children }) {
   return (
-    <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-      <h3 className="text-2xl font-semibold text-gray-800 mb-4">{title}</h3>
-      <div className="space-y-4">{children}</div>
+    <div className="bg-white p-6 rounded-md border border-gray-200 shadow-sm">
+      <h2 className="text-xl font-semibold text-[#CD0A1A] mb-4">{title}</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">{children}</div>
     </div>
   );
 }

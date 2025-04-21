@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { Bookmark, MoreVertical } from "lucide-react";
-import Image from "next/image"; 
+import { Bookmark, MoreVertical, X } from "lucide-react";
+import Image from "next/image";
 import Navbar from "@/app/(navbar)/navbar/page";
 
 const jobList = [
@@ -45,41 +45,36 @@ const jobList = [
 const EmployeHome = () => {
   const [selectedJob, setSelectedJob] = useState(jobList[0]);
   const [showMore, setShowMore] = useState(false);
+  const [mobileDetailOpen, setMobileDetailOpen] = useState(false);
 
-  const extraDescription = `Loram 5 Tablet is a combination medicine used to treat hypertension (high blood pressure).
-  It helps to control blood pressure when a single medication is not effective. It also helps to reduce the chances
-  of any future heart attack and stroke. Loram 5 Tablet is a combination medicine used to treat hypertension (high blood pressure).
-  It helps to control blood pressure when a single medication is not effective. It also helps to reduce the chances
-  of any future heart attack and stroke. Loram 5 Tablet is a combination medicine used to treat hypertension (high blood pressure).
-  It helps to control blood pressure when a single medication is not effective. It also helps to reduce the chances
-  of any future heart attack and stroke.`;
+  const extraDescription = `Loram 5 Tablet is a combination medicine used to treat hypertension (high blood pressure). It helps to control blood pressure when a single medication is not effective. It also helps to reduce the chances of any future heart attack and stroke.`;
 
   return (
     <div className="flex flex-col h-screen bg-gray-50">
       <Navbar />
 
       {/* Search Bar */}
-      <div className="flex items-center justify-center gap-2 p-4">
+      <div className="flex flex-col md:flex-row items-center justify-center gap-2 p-4">
         <div className="flex items-center bg-gray-100 rounded-full px-4 py-2 w-full max-w-xl">
-          <span className="text-gray-400 mr-2">🔍</span>
+          <span className="text-[#CD0A1A] mr-2">🔍</span>
           <input
             type="text"
             placeholder="Find your perfect job"
-            className="bg-transparent outline-none flex-1 text-gray-700"
+            className="bg-transparent outline-none flex-1 text-[#555454]"
           />
         </div>
-        <div className="flex items-center bg-gray-100 rounded-full px-4 py-2 w-48">
-          <span className="text-gray-400 mr-2">📍</span>
+        <div className="flex items-center bg-gray-100 rounded-full px-4 py-2 w-full md:w-48">
+          <span className="text-[#CD0A1A] mr-2">📍</span>
           <input
             type="text"
             placeholder="Location"
-            className="bg-transparent outline-none flex-1 text-gray-700"
+            className="bg-transparent outline-none flex-1 text-[#555454]"
           />
         </div>
       </div>
 
       {/* Main Section */}
-      <div className="flex flex-grow p-4 gap-4 overflow-hidden">
+      <div className="flex flex-col md:flex-row flex-grow p-4 gap-4 overflow-hidden">
         {/* Left - Job List */}
         <div className="w-full md:w-1/3 md:ml-40 overflow-y-auto pr-2">
           {jobList.map((job, index) => (
@@ -87,11 +82,12 @@ const EmployeHome = () => {
               key={index}
               onClick={() => {
                 setSelectedJob(job);
-                setShowMore(false); // reset on job change
+                setShowMore(false);
+                setMobileDetailOpen(true);
               }}
-              className={`border rounded-lg p-4 cursor-pointer relative flex gap-3 transition h-48 ${
+              className={`border rounded-lg p-4 cursor-pointer relative flex gap-3 transition h-48 mb-4 ${
                 selectedJob.company === job.company
-                  ? "border-green-600 bg-white shadow"
+                  ? "border-[#CD0A1A] bg-white shadow"
                   : "bg-white"
               }`}
             >
@@ -109,7 +105,7 @@ const EmployeHome = () => {
                   <div className="flex justify-between items-start">
                     <div>
                       <div className="flex items-center gap-2">
-                        <p className="font-semibold">{job.company}</p>
+                        <p className="font-semibold text-[#555454]">{job.company}</p>
                         {job.rating && <p className="text-sm">⭐ {job.rating}</p>}
                       </div>
                       <p className="font-bold">{job.role}</p>
@@ -119,7 +115,7 @@ const EmployeHome = () => {
                     <div className="text-sm text-gray-400">{job.posted}</div>
                   </div>
                   {job.easyApply && (
-                    <p className="text-green-600 text-sm mt-2 font-medium">
+                    <p className="text-[#CD0A1A] text-sm mt-2 font-medium">
                       ⚡ Easy Apply
                     </p>
                   )}
@@ -130,7 +126,7 @@ const EmployeHome = () => {
           ))}
         </div>
 
-        {/* Right - Job Details */}
+        {/* Right - Job Details (Web View) */}
         <div className="hidden md:block w-2/3 bg-white rounded-lg shadow p-6 overflow-y-auto mr-48">
           {selectedJob && (
             <>
@@ -147,13 +143,13 @@ const EmployeHome = () => {
                       />
                     )}
                     <div>
-                      <p className="font-semibold">{selectedJob.company}</p>
+                      <p className="font-semibold text-[#555454]">{selectedJob.company}</p>
                       {selectedJob.rating && (
                         <p className="text-sm">⭐ {selectedJob.rating}</p>
                       )}
                     </div>
                   </div>
-                  <h2 className="text-2xl font-bold mt-2">{selectedJob.role}</h2>
+                  <h2 className="text-2xl font-bold mt-2 text-[#CD0A1A]">{selectedJob.role}</h2>
                   <p className="text-sm text-gray-600">
                     {selectedJob.location} · {selectedJob.salary}
                   </p>
@@ -161,23 +157,21 @@ const EmployeHome = () => {
                 <div className="flex items-center gap-3">
                   <MoreVertical className="text-gray-500" />
                   <Bookmark className="text-gray-500" />
-                  <button className="bg-green-500 text-white px-4 py-2 rounded-md">
+                  <button className="bg-[#CD0A1A] text-white px-4 py-2 rounded-md cursor-pointer">
                     Apply on employer site
                   </button>
                 </div>
               </div>
 
               <div className="mt-6">
-                <h3 className="font-semibold mb-2">Responsibilities:</h3>
+                <h3 className="font-semibold mb-2 text-[#555454]">Responsibilities:</h3>
                 <ul className="list-disc list-inside text-sm text-gray-700 space-y-1">
                   <li>Developing new user-facing features using React.js</li>
-                  <li>Building reusable components and front-end libraries for future use</li>
-                  <li>Translate User Stories and wireframes into high quality code</li>
-                  <li>Create applications which provide fantastic UI/UX and responsive design</li>
-                  <li>Integrate apps with third-party APIs and Cloud APIs</li>
-                  <li>Apply core Computer Science concepts to improve consumer web apps</li>
-                  <li>Profile and improve our frontend performance</li>
-                  <li>Design for scalability and adherence to standards</li>
+                  <li>Building reusable components and front-end libraries</li>
+                  <li>Translate wireframes into high quality code</li>
+                  <li>Create responsive UI/UX</li>
+                  <li>Integrate third-party APIs</li>
+                  <li>Improve frontend performance</li>
                 </ul>
 
                 {showMore && (
@@ -187,7 +181,7 @@ const EmployeHome = () => {
                 )}
 
                 <p
-                  className="text-green-700 mt-4 cursor-pointer font-semibold"
+                  className="text-[#CD0A1A] mt-4 cursor-pointer font-semibold"
                   onClick={() => setShowMore((prev) => !prev)}
                 >
                   {showMore ? "Show less ↑" : "Show more ↓"}
@@ -196,6 +190,68 @@ const EmployeHome = () => {
             </>
           )}
         </div>
+
+        {/* Mobile View Job Detail Overlay */}
+        {mobileDetailOpen && (
+          <div className="md:hidden fixed inset-0 bg-white z-50 p-4 overflow-y-auto">
+            <div className="flex justify-between items-start">
+              <div>
+                <div className="flex items-center gap-2">
+                  {selectedJob.logo && (
+                    <Image
+                      src={selectedJob.logo}
+                      alt={selectedJob.company}
+                      width={40}
+                      height={40}
+                      className="rounded"
+                    />
+                  )}
+                  <div>
+                    <p className="font-semibold text-[#555454]">{selectedJob.company}</p>
+                    {selectedJob.rating && <p className="text-sm">⭐ {selectedJob.rating}</p>}
+                  </div>
+                </div>
+                <h2 className="text-xl font-bold mt-2 text-[#CD0A1A]">{selectedJob.role}</h2>
+                <p className="text-sm text-gray-600">
+                  {selectedJob.location} · {selectedJob.salary}
+                </p>
+              </div>
+              <X
+                className="text-gray-500 w-6 h-6"
+                onClick={() => setMobileDetailOpen(false)}
+              />
+            </div>
+
+            <div className="mt-6">
+              <h3 className="font-semibold mb-2 text-[#555454]">Responsibilities:</h3>
+              <ul className="list-disc list-inside text-sm text-gray-700 space-y-1">
+                <li>Developing new user-facing features using React.js</li>
+                <li>Building reusable components and front-end libraries</li>
+                <li>Translate wireframes into high quality code</li>
+                <li>Create responsive UI/UX</li>
+                <li>Integrate third-party APIs</li>
+                <li>Improve frontend performance</li>
+              </ul>
+
+              {showMore && (
+                <p className="text-sm text-gray-700 mt-4 whitespace-pre-line">
+                  {extraDescription}
+                </p>
+              )}
+
+              <p
+                className="text-[#CD0A1A] mt-4 cursor-pointer font-semibold"
+                onClick={() => setShowMore((prev) => !prev)}
+              >
+                {showMore ? "Show less ↑" : "Show more ↓"}
+              </p>
+
+              <button className="bg-[#CD0A1A] text-white mt-6 w-full py-2 rounded-md">
+                Apply on employer site
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

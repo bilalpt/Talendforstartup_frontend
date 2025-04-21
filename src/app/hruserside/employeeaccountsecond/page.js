@@ -1,5 +1,7 @@
 'use client';
 import { useState } from 'react';
+import Image from 'next/image'; // 
+
 
 export default function JobBasicsForm() {
   const [formData, setFormData] = useState({
@@ -42,7 +44,6 @@ export default function JobBasicsForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const formErrors = validateForm();
     if (Object.keys(formErrors).length > 0) {
       setErrors(formErrors);
@@ -51,28 +52,19 @@ export default function JobBasicsForm() {
 
     try {
       setIsSubmitting(true);
-      console.log('Submitting job form...');
-      
       const response = await fetch('https://talent4startup.onrender.com/jobs/create', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
 
       const result = await response.json();
-      console.log(result, 'Response from API');
-      
       if (!response.ok) {
         setErrorMessage(`❌ Error: ${result.message}`);
         setSuccessMessage('');
       } else {
         setErrorMessage('');
         setSuccessMessage('✅ Job created successfully!');
-        console.log('Result:', result);
-
-        // Reset form after successful submission
         setFormData({
           companyName: '',
           companyDescription: '',
@@ -88,7 +80,6 @@ export default function JobBasicsForm() {
         setErrors({});
       }
     } catch (err) {
-      console.error('🚨 Error:', err);
       setErrorMessage('An error occurred while submitting the job.');
       setSuccessMessage('');
     } finally {
@@ -97,181 +88,108 @@ export default function JobBasicsForm() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto bg-white p-8 shadow-2xl rounded-lg">
-      <h1 className="text-3xl font-semibold text-gray-800 mb-6">Job Basics</h1>
+    <div className="flex items-center justify-between">
+      {/* Left Side - Image */}
+      <div className="hidden lg:block w-xl">
+        <img src="/hrsideimages/girlwithcv.svg" alt="Image" className="w-full h-full object-cover rounded-l-xl" />
+      </div>
 
-      {/* Success/Error Message */}
-      {successMessage && <div className="text-green-500 font-medium mb-4">{successMessage}</div>}
-      {errorMessage && <div className="text-red-500 font-medium mb-4">{errorMessage}</div>}
+      {/* Right Side - Form */}
+      <div className="max-w-xl mx-auto bg-[#f9f9f9] p-6 shadow-xl rounded-xl border border-gray-200 w-full lg:w-1/2">
+        <h1 className="text-2xl font-bold text-[#CD0A1A] mb-6">Job Basics</h1>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div>
-          <label htmlFor="companyName" className="block text-sm font-medium text-gray-700">
-            Company Name <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            id="companyName"
-            name="companyName"
-            value={formData.companyName}
-            onChange={handleChange}
-            required
-            placeholder="Eg: Rainbow Graphix Pvt Ltd"
-            className={`mt-1 block w-full rounded-md border ${errors.companyName ? 'border-red-500' : 'border-gray-300'} shadow-sm p-3`}
-          />
-          {errors.companyName && <p className="text-red-500 text-sm">{errors.companyName}</p>}
-        </div>
+        {successMessage && <div className="text-green-600 font-medium mb-4">{successMessage}</div>}
+        {errorMessage && <div className="text-red-600 font-medium mb-4">{errorMessage}</div>}
 
-        <div>
-          <label htmlFor="companyDescription" className="block text-sm font-medium text-gray-700">
-            Company Description
-          </label>
-          <textarea
-            id="companyDescription"
-            name="companyDescription"
-            value={formData.companyDescription}
-            onChange={handleChange}
-            placeholder="Introduce your company: business, culture, market position..."
-            rows="4"
-            className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm p-3"
-          />
-        </div>
+        <form onSubmit={handleSubmit} className="space-y-5">
+          {[{ id: 'companyName', label: 'Company Name', required: true, type: 'text', placeholder: 'Eg: Rainbow Graphix Pvt Ltd' },
+            { id: 'companyDescription', label: 'Company Description', type: 'textarea', placeholder: 'Describe your company...' },
+            { id: 'jobTitle', label: 'Job Title', required: true, type: 'text' },
+            { id: 'jobDescription', label: 'Job Description', required: true, type: 'textarea', placeholder: 'Describe the role and responsibilities...' },
+            { id: 'salary', label: 'Salary (Per Month)', required: true, type: 'text', placeholder: 'Eg: ₹30,000' }].map(({ id, label, required, type, placeholder }) => (
+              <div key={id}>
+                <label htmlFor={id} className="block text-sm font-medium text-gray-700">
+                  {label} {required && <span className="text-red-500">*</span>}
+                </label>
+                {type === 'textarea' ? (
+                  <textarea
+                    id={id}
+                    name={id}
+                    value={formData[id]}
+                    onChange={handleChange}
+                    placeholder={placeholder}
+                    rows="3"
+                    className={`mt-1 block w-full rounded-md border ${errors[id] ? 'border-red-500' : 'border-gray-300'} shadow-sm p-2 focus:outline-none focus:ring-2 focus:ring-[#CD0A1A]`}
+                  />
+                ) : (
+                  <input
+                    type={type}
+                    id={id}
+                    name={id}
+                    value={formData[id]}
+                    onChange={handleChange}
+                    required={required}
+                    placeholder={placeholder}
+                    className={`mt-1 block w-full rounded-md border ${errors[id] ? 'border-red-500' : 'border-gray-300'} shadow-sm p-2 focus:outline-none focus:ring-2 focus:ring-[#CD0A1A]`}
+                  />
+                )}
+                {errors[id] && <p className="text-red-500 text-sm">{errors[id]}</p>}
+              </div>
+            ))}
 
-        <div>
-          <label htmlFor="jobTitle" className="block text-sm font-medium text-gray-700">
-            Job Title <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            id="jobTitle"
-            name="jobTitle"
-            value={formData.jobTitle}
-            onChange={handleChange}
-            required
-            className={`mt-1 block w-full rounded-md border ${errors.jobTitle ? 'border-red-500' : 'border-gray-300'} shadow-sm p-3`}
-          />
-          {errors.jobTitle && <p className="text-red-500 text-sm">{errors.jobTitle}</p>}
-        </div>
-
-        <div>
-          <label htmlFor="jobDescription" className="block text-sm font-medium text-gray-700">
-            Job Description <span className="text-red-500">*</span>
-          </label>
-          <textarea
-            id="jobDescription"
-            name="jobDescription"
-            value={formData.jobDescription}
-            onChange={handleChange}
-            required
-            rows="4"
-            placeholder="Describe the role and responsibilities..."
-            className={`mt-1 block w-full rounded-md border ${errors.jobDescription ? 'border-red-500' : 'border-gray-300'} shadow-sm p-3`}
-          />
-          {errors.jobDescription && <p className="text-red-500 text-sm">{errors.jobDescription}</p>}
-        </div>
-
-        <div>
-          <label htmlFor="salary" className="block text-sm font-medium text-gray-700">
-            Salary (Per Month) <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            id="salary"
-            name="salary"
-            value={formData.salary}
-            onChange={handleChange}
-            placeholder="Eg: ₹30,000"
-            required
-            className={`mt-1 block w-full rounded-md border ${errors.salary ? 'border-red-500' : 'border-gray-300'} shadow-sm p-3`}
-          />
-          {errors.salary && <p className="text-red-500 text-sm">{errors.salary}</p>}
-        </div>
-
-        <div>
-          <label htmlFor="locationType" className="block text-sm font-medium text-gray-700">
-            Job Location Type <span className="text-red-500">*</span>
-          </label>
-          <select
-            id="locationType"
-            name="locationType"
-            value={formData.locationType}
-            onChange={handleChange}
-            className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm p-3"
-          >
-            <option>On-site</option>
-            <option>Remote</option>
-            <option>Hybrid</option>
-          </select>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label htmlFor="city" className="block text-sm font-medium text-gray-700">
-              City <span className="text-red-500">*</span>
+            <label htmlFor="locationType" className="block text-sm font-medium text-gray-700">
+              Job Location Type
             </label>
-            <input
-              type="text"
-              id="city"
-              name="city"
-              value={formData.city}
+            <select
+              id="locationType"
+              name="locationType"
+              value={formData.locationType}
               onChange={handleChange}
-              required
-              className={`mt-1 block w-full rounded-md border ${errors.city ? 'border-red-500' : 'border-gray-300'} shadow-sm p-3`}
-            />
-            {errors.city && <p className="text-red-500 text-sm">{errors.city}</p>}
+              className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm p-2 focus:outline-none focus:ring-2 focus:ring-[#CD0A1A]"
+            >
+              <option>On-site</option>
+              <option>Remote</option>
+              <option>Hybrid</option>
+            </select>
           </div>
-          <div>
-            <label htmlFor="area" className="block text-sm font-medium text-gray-700">
-              Area
-            </label>
-            <input
-              type="text"
-              id="area"
-              name="area"
-              value={formData.area}
-              onChange={handleChange}
-              className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm p-3"
-            />
-          </div>
-          <div>
-            <label htmlFor="pincode" className="block text-sm font-medium text-gray-700">
-              Pincode
-            </label>
-            <input
-              type="text"
-              id="pincode"
-              name="pincode"
-              value={formData.pincode}
-              onChange={handleChange}
-              className={`mt-1 block w-full rounded-md border ${errors.pincode ? 'border-red-500' : 'border-gray-300'} shadow-sm p-3`}
-            />
-            {errors.pincode && <p className="text-red-500 text-sm">{errors.pincode}</p>}
-          </div>
-          <div>
-            <label htmlFor="streetAddress" className="block text-sm font-medium text-gray-700">
-              Street Address
-            </label>
-            <input
-              type="text"
-              id="streetAddress"
-              name="streetAddress"
-              value={formData.streetAddress}
-              onChange={handleChange}
-              className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm p-3"
-            />
-          </div>
-        </div>
 
-        <div>
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className={`w-full ${isSubmitting ? 'bg-gray-400' : 'bg-blue-600'} text-white py-3 rounded-md text-lg`}
-          >
-            {isSubmitting ? 'Submitting...' : 'Submit Job'}
-          </button>
-        </div>
-      </form>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {[{ id: 'city', label: 'City', required: true },
+              { id: 'area', label: 'Area' },
+              { id: 'pincode', label: 'Pincode' },
+              { id: 'streetAddress', label: 'Street Address' }].map(({ id, label, required }) => (
+                <div key={id}>
+                  <label htmlFor={id} className="block text-sm font-medium text-gray-700">
+                    {label} {required && <span className="text-red-500">*</span>}
+                  </label>
+                  <input
+                    type="text"
+                    id={id}
+                    name={id}
+                    value={formData[id]}
+                    onChange={handleChange}
+                    required={required}
+                    className={`mt-1 block w-full rounded-md border ${errors[id] ? 'border-red-500' : 'border-gray-300'} shadow-sm p-2 focus:outline-none focus:ring-2 focus:ring-[#CD0A1A]`}
+                  />
+                  {errors[id] && <p className="text-red-500 text-sm">{errors[id]}</p>}
+                </div>
+              ))}
+          </div>
+
+          <div>
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className={`w-full text-white py-2 rounded-md text-base font-semibold transition duration-200 ${
+                isSubmitting ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#CD0A1A] hover:bg-red-700'
+              }`}
+            >
+              {isSubmitting ? 'Submitting...' : 'Submit Job'}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }
