@@ -51,10 +51,10 @@ const Navbar = () => {
             height={80}
           />
         </Link>
-        <div className="flex gap-6">
-          <NavLink href="/employeeuserside/emplyeehomepage/employehome">Home</NavLink>
-          <NavLink href="/employeeuserside/companyreviews">Company reviews</NavLink>
-          <NavLink href="/salary-guide">Salary guide</NavLink>
+        <div className="flex gap-6 ">
+          <NavLink className='text-[#CD0A1A]' href="/employeeuserside/emplyeehomepage/employehome">Home</NavLink>
+          <NavLink className='text-[#CD0A1A]' href="/employeeuserside/companyreviews">Company reviews</NavLink>
+          <NavLink className='text-[#CD0A1A]' href="/salary-guide">Saved Jobs</NavLink>
         </div>
       </div>
 

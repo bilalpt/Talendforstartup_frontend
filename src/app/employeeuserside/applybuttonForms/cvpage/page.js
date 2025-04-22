@@ -1,0 +1,104 @@
+'use client';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { ArrowUpTrayIcon, DocumentArrowUpIcon } from '@heroicons/react/24/solid';
+
+export default function CVUploader() {
+  const [cvFile, setCvFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      router.push('/homepagesignup');
+    } else {
+      setIsAuthenticated(true);
+    }
+  }, [router]);
+
+  const handleCvUpload = (e) => {
+    const file = e.target.files[0];
+    setCvFile(file);
+    setPreviewUrl(URL.createObjectURL(file));
+  };
+
+  const handleSubmit = () => {
+    if (!cvFile) {
+      alert('⚠️ Please upload your CV before submitting.');
+      return;
+    }
+    alert('✅ CV Submitted successfully!');
+    router.push('/employeeuserside/applybuttonForms/experienceform');
+  };
+
+  if (!isAuthenticated) {
+    return null; // Optional: loading spinner
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-100 py-12 px-4 flex flex-col items-center">
+      <h1 className="text-4xl font-bold text-gray-800 mb-8 text-center">Upload Your CV</h1>
+
+      <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* CV Upload */}
+        <div className="bg-white rounded-2xl shadow-lg p-6">
+          <div className="mb-4">
+            <label className="block text-lg font-medium text-gray-700 mb-2">Upload PDF</label>
+            <label className="flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed border-blue-400 text-blue-700 rounded-xl cursor-pointer bg-blue-50 hover:bg-blue-100 transition">
+              <DocumentArrowUpIcon className="w-6 h-6" />
+              <span className="font-medium">
+                {cvFile ? cvFile.name : 'Choose File'}
+              </span>
+              <input
+                type="file"
+                accept=".pdf"
+                onChange={handleCvUpload}
+                className="hidden"
+              />
+            </label>
+          </div>
+
+          {previewUrl && (
+            <iframe
+              src={previewUrl}
+              className="w-full h-96 border rounded-xl mt-4"
+              title="CV Preview"
+            />
+          )}
+        </div>
+
+        {/* Job Description */}
+        <div className="bg-white rounded-2xl shadow-lg p-6">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-1">Full Stack Developer</h2>
+          <p className="text-gray-500 mb-4">Magenta EV Solutions Pvt. Ltd - Bangalore, Karnataka</p>
+
+          <div className="text-sm text-gray-700 space-y-3">
+            <p className="leading-relaxed">
+              We’re looking for a passionate full-stack developer with experience building modern web applications.
+            </p>
+            <ul className="list-disc pl-5 space-y-2">
+              <li>Proficiency in JavaScript, React, and modern CSS frameworks.</li>
+              <li>Experience with backend technologies like Node.js, Golang, or Python.</li>
+              <li>Familiarity with REST APIs and databases.</li>
+            </ul>
+          </div>
+
+          <button className="mt-6 text-blue-600 hover:text-blue-800 font-medium underline transition">
+            View full job description
+          </button>
+        </div>
+      </div>
+
+      {/* Submit Button */}
+      <button
+        onClick={handleSubmit}
+        className="mt-10 flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-full text-lg font-semibold transition"
+      >
+        <ArrowUpTrayIcon className="w-5 h-5" />
+        Submit CV
+      </button>
+    </div>
+  );
+}

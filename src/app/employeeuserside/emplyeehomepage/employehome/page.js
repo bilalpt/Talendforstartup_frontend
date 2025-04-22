@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Bookmark, MoreVertical, X } from "lucide-react";
 import Image from "next/image";
 import Navbar from "@/app/(navbar)/navbar/page";
+import { useRouter } from "next/navigation";
 
 const jobList = [
   {
@@ -43,6 +44,7 @@ const jobList = [
 ];
 
 const EmployeHome = () => {
+  const router = useRouter();
   const [selectedJob, setSelectedJob] = useState(jobList[0]);
   const [showMore, setShowMore] = useState(false);
   const [mobileDetailOpen, setMobileDetailOpen] = useState(false);
@@ -157,7 +159,7 @@ const EmployeHome = () => {
                 <div className="flex items-center gap-3">
                   <MoreVertical className="text-gray-500" />
                   <Bookmark className="text-gray-500" />
-                  <button className="bg-[#CD0A1A] text-white px-4 py-2 rounded-md cursor-pointer">
+                  <button onClick={()=>router.push('/employeeuserside/applybuttonForms/contactform')}  className="bg-[#CD0A1A] text-white px-4 py-2 rounded-md cursor-pointer">
                     Apply on employer site
                   </button>
                 </div>
@@ -246,7 +248,7 @@ const EmployeHome = () => {
                 {showMore ? "Show less ↑" : "Show more ↓"}
               </p>
 
-              <button className="bg-[#CD0A1A] text-white mt-6 w-full py-2 rounded-md">
+              <button  className="bg-[#CD0A1A] text-white mt-6 w-full py-2 rounded-md">
                 Apply on employer site
               </button>
             </div>

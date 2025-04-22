@@ -1,7 +1,8 @@
 'use client';
+
 import { useParams } from 'next/navigation';
 import React from 'react';
-import { Briefcase, MapPin, CalendarCheck, Info } from 'lucide-react'; // Optional icons
+import { Briefcase, MapPin, CalendarCheck } from 'lucide-react';
 import Navbar from '@/app/(navbar)/navbar/page';
 
 const jobs = [
@@ -59,79 +60,87 @@ const jobs = [
 
 const JobDetail = () => {
   const params = useParams();
-  const jobId = Number(params.id);
-  const job = jobs.find(j => j.id === jobId);
+  const jobId = params?.id;
+  const job = jobs.find(j => String(j.id) === jobId);
 
-  if (!job) return <div className="text-center mt-10 text-red-600 text-lg">🚫 Job not found</div>;
+  if (!params?.id) {
+    return <div className="text-center mt-10 text-yellow-600 text-lg">⏳ Loading...</div>;
+  }
+
+  if (!job) {
+    return <div className="text-center mt-10 text-red-600 text-lg">🚫 Job not found</div>;
+  }
 
   return (
     <div>
-        <Navbar/>
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white py-12 px-6 sm:px-8">
-      <div className="max-w-3xl mx-auto bg-white shadow-xl rounded-2xl p-8 border border-gray-100">
-        <div className="mb-6">
-          <h1 className="text-3xl font-extrabold text-gray-900 mb-2">{job.title}</h1>
-          <div className="flex items-center text-gray-600 text-sm space-x-4">
-            <div className="flex items-center gap-1">
-              <Briefcase className="w-4 h-4" />
-              <span>{job.company}</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <MapPin className="w-4 h-4" />
-              <span>{job.location}</span>
+      <Navbar />
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white py-12 px-6 sm:px-8">
+        <div className="max-w-3xl mx-auto bg-white shadow-2xl rounded-2xl p-8 border border-gray-100">
+          <div className="mb-6">
+            <h1 className="text-3xl font-extrabold text-[#CD0A1A] mb-2">{job.title}</h1>
+            <div className="flex items-center text-gray-600 text-sm space-x-4">
+              <div className="flex items-center gap-1">
+                <Briefcase className="w-4 h-4" />
+                <span>{job.company}</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <MapPin className="w-4 h-4" />
+                <span>{job.location}</span>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="space-y-4">
-          <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
-            <p className="text-sm text-blue-800">
-              <strong>Status:</strong> {job.status}
-            </p>
-          </div>
-
-          <div className="flex items-center text-gray-700 text-sm">
-            <CalendarCheck className="w-4 h-4 mr-2" />
-            Applied on: <span className="ml-1 font-medium">{job.appliedDate}</span>
-          </div>
-
-          <div className="mt-10">
-            <h2 className="text-xl font-semibold text-gray-800 mb-3">📝 Job Description</h2>
-
-            <p className="text-gray-700 mb-5">{job.description.overview}</p>
-
-            <div className="mb-5">
-              <h3 className="font-medium text-gray-800 mb-2">🔧 Responsibilities</h3>
-              <ul className="list-disc list-inside text-gray-700 space-y-1">
-                {job.description.responsibilities.map((item, idx) => (
-                  <li key={idx}>{item}</li>
-                ))}
-              </ul>
+          <div className="space-y-4">
+            <div className="bg-[#CD0A1A]/10 border-l-4 border-[#CD0A1A] p-4 rounded">
+              <p className="text-sm text-[#CD0A1A]">
+                <strong>Status:</strong> {job.status}
+              </p>
             </div>
 
-            <div className="mb-5">
-              <h3 className="font-medium text-gray-800 mb-2">✅ Requirements</h3>
-              <ul className="list-disc list-inside text-gray-700 space-y-1">
-                {job.description.requirements.map((item, idx) => (
-                  <li key={idx}>{item}</li>
-                ))}
-              </ul>
+            <div className="flex items-center text-gray-700 text-sm">
+              <CalendarCheck className="w-4 h-4 mr-2" />
+              Applied on: <span className="ml-1 font-medium">{job.appliedDate}</span>
             </div>
 
-            <div className="mb-5">
-              <h3 className="font-medium text-gray-800 mb-2">🛠 Tools & Technologies</h3>
-              <div className="flex flex-wrap gap-2">
-                {job.description.tools.map((tool, idx) => (
-                  <span key={idx} className="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">
-                    {tool}
-                  </span>
-                ))}
+            <div className="mt-10">
+              <h2 className="text-xl font-semibold text-[#CD0A1A] mb-3">📝 Job Description</h2>
+              <p className="text-gray-700 mb-5">{job.description.overview}</p>
+
+              <div className="mb-5">
+                <h3 className="font-medium text-[#CD0A1A] mb-2">🔧 Responsibilities</h3>
+                <ul className="list-disc list-inside text-gray-700 space-y-1">
+                  {job.description.responsibilities.map((item, idx) => (
+                    <li key={idx}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="mb-5">
+                <h3 className="font-medium text-[#CD0A1A] mb-2">✅ Requirements</h3>
+                <ul className="list-disc list-inside text-gray-700 space-y-1">
+                  {job.description.requirements.map((item, idx) => (
+                    <li key={idx}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="mb-5">
+                <h3 className="font-medium text-[#CD0A1A] mb-2">🛠 Tools & Technologies</h3>
+                <div className="flex flex-wrap gap-2">
+                  {job.description.tools.map((tool, idx) => (
+                    <span
+                      key={idx}
+                      className="bg-[#CD0A1A]/10 text-[#CD0A1A] text-sm font-medium px-3 py-1 rounded-full"
+                    >
+                      {tool}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
     </div>
   );
 };
