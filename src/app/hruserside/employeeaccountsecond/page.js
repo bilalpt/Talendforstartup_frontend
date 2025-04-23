@@ -1,9 +1,11 @@
 'use client';
-import { useState } from 'react';
-import Image from 'next/image'; // 
-
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 export default function JobBasicsForm() {
+  const router = useRouter();
+
   const [formData, setFormData] = useState({
     companyName: '',
     companyDescription: '',
@@ -21,6 +23,14 @@ export default function JobBasicsForm() {
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+
+  // 🔐 Redirect if token is missing
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      router.push('/homepagesignup'); // Replace with your actual signup path
+    }
+  }, [router]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -54,7 +64,10 @@ export default function JobBasicsForm() {
       setIsSubmitting(true);
       const response = await fetch('https://talent4startup.onrender.com/jobs/create', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
         body: JSON.stringify(formData),
       });
 

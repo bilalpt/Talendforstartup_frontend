@@ -1,12 +1,24 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Briefcase, Calendar, MapPin, Trash2 } from 'lucide-react';
 
 export default function JobFormDetails() {
+  const router = useRouter();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [expandedJobId, setExpandedJobId] = useState(null);
   const [editingJobId, setEditingJobId] = useState(null);
   const [editedJob, setEditedJob] = useState({});
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      router.push('/homepagesignup'); 
+    } else {
+      setIsAuthenticated(true);
+    }
+  }, []);
 
   const [appliedJobs, setAppliedJobs] = useState([
     {
@@ -27,9 +39,8 @@ export default function JobFormDetails() {
       appliedDate: 'April 18, 2025',
       status: 'Interview Scheduled',
       jobDescription:
-        'As a Backend Developer, you will be responsible for building and maintaining the server-side logic of web applications, focusing on database management and API development.',
+        'As a Backend Developer, you will be responsible for building and maintaining the server-side logic of web applications.',
     },
-    // Add more jobs as needed
   ]);
 
   const itemsPerPage = 3;
@@ -93,6 +104,9 @@ export default function JobFormDetails() {
     }
   };
 
+  // Wait until authenticated
+  if (!isAuthenticated) return null;
+
   return (
     <div className="min-h-screen bg-[#f9f9f9] p-6">
       <div className="max-w-4xl mx-auto">
@@ -152,154 +166,19 @@ export default function JobFormDetails() {
                 </button>
 
                 {expandedJobId === job.id && (
-                  <div className="mt-4">
-                    {editingJobId === job.id ? (
-                      <div className="p-4 bg-gray-100 rounded-lg shadow-md space-y-4">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-600">
-                            Job Title
-                          </label>
-                          <input
-                            type="text"
-                            name="title"
-                            value={editedJob.title}
-                            onChange={handleChange}
-                            className="mt-1 p-2 w-full border rounded-md"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-600">
-                            Company Name
-                          </label>
-                          <input
-                            type="text"
-                            name="companyName"
-                            value={editedJob.companyName || ''}
-                            onChange={handleChange}
-                            className="mt-1 p-2 w-full border rounded-md"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-600">
-                            Company Description
-                          </label>
-                          <textarea
-                            name="companyDescription"
-                            value={editedJob.companyDescription || ''}
-                            onChange={handleChange}
-                            className="mt-1 p-2 w-full border rounded-md"
-                            rows={3}
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-600">
-                            Salary
-                          </label>
-                          <input
-                            type="text"
-                            name="salary"
-                            value={editedJob.salary || ''}
-                            onChange={handleChange}
-                            className="mt-1 p-2 w-full border rounded-md"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-600">
-                            Location Type
-                          </label>
-                          <select
-                            name="locationType"
-                            value={editedJob.locationType || 'On-site'}
-                            onChange={handleChange}
-                            className="mt-1 p-2 w-full border rounded-md"
-                          >
-                            <option value="On-site">On-site</option>
-                            <option value="Remote">Remote</option>
-                          </select>
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-600">
-                            City
-                          </label>
-                          <input
-                            type="text"
-                            name="city"
-                            value={editedJob.city || ''}
-                            onChange={handleChange}
-                            className="mt-1 p-2 w-full border rounded-md"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-600">
-                            Area
-                          </label>
-                          <input
-                            type="text"
-                            name="area"
-                            value={editedJob.area || ''}
-                            onChange={handleChange}
-                            className="mt-1 p-2 w-full border rounded-md"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-600">
-                            Pincode
-                          </label>
-                          <input
-                            type="text"
-                            name="pincode"
-                            value={editedJob.pincode || ''}
-                            onChange={handleChange}
-                            className="mt-1 p-2 w-full border rounded-md"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-600">
-                            Street Address
-                          </label>
-                          <input
-                            type="text"
-                            name="streetAddress"
-                            value={editedJob.streetAddress || ''}
-                            onChange={handleChange}
-                            className="mt-1 p-2 w-full border rounded-md"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-600">
-                            Job Description
-                          </label>
-                          <textarea
-                            name="jobDescription"
-                            value={editedJob.jobDescription}
-                            onChange={handleChange}
-                            className="mt-1 p-2 w-full border rounded-md"
-                            rows={4}
-                          />
-                        </div>
-                        <button
-                          onClick={handleSave}
-                          className="bg-green-600 text-white px-4 py-2 rounded-md"
-                        >
-                          Save Changes
-                        </button>
-                      </div>
-                    ) : (
-                      <div className="p-4 bg-gray-100 rounded-lg shadow-md">
-                        <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                          Job Description
-                        </h3>
-                        <p className="text-sm text-gray-600">
-                          {job.jobDescription}
-                        </p>
-                        <button
-                          onClick={() => handleEdit(job)}
-                          className="mt-4 text-blue-600 hover:text-blue-800 transition-all"
-                        >
-                          Edit
-                        </button>
-                      </div>
-                    )}
+                  <div className="mt-4 p-4 bg-gray-100 rounded-lg shadow-md">
+                    <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                      Job Description
+                    </h3>
+                    <p className="text-sm text-gray-600">
+                      {job.jobDescription}
+                    </p>
+                    <button
+                      onClick={() => handleEdit(job)}
+                      className="mt-4 text-blue-600 hover:text-blue-800 transition-all"
+                    >
+                      Edit
+                    </button>
                   </div>
                 )}
               </div>
@@ -311,7 +190,6 @@ export default function JobFormDetails() {
           </p>
         )}
 
-        {/* Pagination Controls */}
         <div className="flex justify-center mt-6">
           <button
             onClick={() => handlePageChange(currentPage - 1)}
@@ -320,7 +198,19 @@ export default function JobFormDetails() {
           >
             Prev
           </button>
-          <span className="px-4 py-2">{`Page ${currentPage} of ${totalPages}`}</span>
+          {[...Array(totalPages)].map((_, index) => (
+            <button
+              key={index + 1}
+              onClick={() => handlePageChange(index + 1)}
+              className={`px-4 py-2 mx-1 rounded-md ${
+                currentPage === index + 1
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-300 hover:bg-gray-400'
+              }`}
+            >
+              {index + 1}
+            </button>
+          ))}
           <button
             onClick={() => handlePageChange(currentPage + 1)}
             className="px-4 py-2 mx-1 bg-gray-300 rounded-md hover:bg-gray-400"

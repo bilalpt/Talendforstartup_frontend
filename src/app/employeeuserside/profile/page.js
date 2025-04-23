@@ -1,4 +1,6 @@
 'use client';
+
+import { useEffect } from 'react';
 import { FiMail, FiPhone } from 'react-icons/fi';
 import { BsThreeDots } from 'react-icons/bs';
 import Navbar from '@/app/(navbar)/navbar/page';
@@ -6,6 +8,13 @@ import { useRouter } from 'next/navigation';
 
 export default function ProfilePage() {
   const router = useRouter();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      router.push('/homepagesignup');
+    }
+  }, []);
 
   const user = {
     name: 'Bilal PT',
@@ -22,9 +31,9 @@ export default function ProfilePage() {
     <div className="bg-[#F8F8F8] min-h-screen">
       <Navbar />
 
-      <div className="max-w-6xl mx-auto p-8 grid grid-cols-1 md:grid-cols-3 gap-8 ">
+      <div className="max-w-6xl mx-auto p-8 grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Left Profile Panel */}
-        <div className="bg-white  rounded-lg p-6 shadow-2xl">
+        <div className="bg-white rounded-lg p-6 shadow-2xl">
           <div className="flex flex-col items-center text-center">
             <div className="w-24 h-24 rounded-full bg-[#CD0A1A] text-white flex items-center justify-center text-3xl font-semibold mb-4 shadow">
               {user.name.split(' ').map((n) => n[0]).join('')}
@@ -46,9 +55,9 @@ export default function ProfilePage() {
         </div>
 
         {/* Right Section */}
-        <div className="md:col-span-2 space-y-8 ">
+        <div className="md:col-span-2 space-y-8">
           {/* Resume Section */}
-          <div className="bg-white  rounded-lg p-6 shadow-2xl">
+          <div className="bg-white rounded-lg p-6 shadow-2xl">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-semibold text-[#555454]">Resume</h3>
             </div>
@@ -67,7 +76,7 @@ export default function ProfilePage() {
           </div>
 
           {/* Job Preferences */}
-          <div className="bg-white  rounded-lg p-6 shadow-2xl">
+          <div className="bg-white rounded-lg p-6 shadow-2xl">
             <h3 className="text-lg font-semibold text-[#555454] mb-4">Improve Your Job Matches</h3>
             <div className="space-y-6">
               {[{

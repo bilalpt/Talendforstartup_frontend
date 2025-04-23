@@ -1,13 +1,23 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation'; // Import useRouter for redirection
 
 export default function JobPreferencesForm() {
+  const router = useRouter(); // Initialize the router
   const [jobTitle, setJobTitle] = useState('IT Engineer');
   const [minPay, setMinPay] = useState('400000');
   const [jobTypes, setJobTypes] = useState('');
   const [workSchedule, setWorkSchedule] = useState('');
   const [relocation, setRelocation] = useState('');
+
+  // useEffect to check token on component mount
+  useEffect(() => {
+    const token = localStorage.getItem('token'); // Get token from localStorage
+    if (!token) {
+      router.push('/homepagesignup'); // Redirect to signup page if no token is found
+    }
+  }, [router]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -22,7 +32,7 @@ export default function JobPreferencesForm() {
   };
 
   return (
-    <section className="max-w-3xl mx-auto my-16 px-8 py-12 bg-white rounded-xl shadow-2xl  ">
+    <section className="max-w-3xl mx-auto my-16 px-8 py-12 bg-white rounded-xl shadow-2xl">
       <h1 className="text-4xl font-bold text-[#CD0A1A] mb-6 text-center">
         Job Preferences
       </h1>

@@ -1,55 +1,42 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Bookmark, MoreVertical, X } from "lucide-react";
 import Image from "next/image";
 import Navbar from "@/app/(navbar)/navbar/page";
 import { useRouter } from "next/navigation";
 
-const jobList = [
-  {
-    company: "Virtusa",
-    rating: 3.7,
-    role: "React Developer",
-    location: "Bengaluru",
-    salary: "₹6L – ₹8L (Glassdoor Est.)",
-    posted: "12d",
-    logo: "/virtusa.png",
-    selected: true,
-  },
-  {
-    company: "Aeolus Aero Tech Private Limited",
-    role: "Front End Developer",
-    location: "India",
-    salary: "₹3L (Employer Est.)",
-    posted: "2d",
-    easyApply: true,
-  },
-  {
-    company: "Nexia Digital",
-    rating: 4.0,
-    role: "ReactJS Developer",
-    location: "Bengaluru",
-    salary: "₹3L – ₹8L (Glassdoor Est.)",
-    posted: "30d+",
-    logo: "/nexia.png",
-  },
-  {
-    company: "Metyis AG",
-    rating: 3.6,
-    role: "Frontend React Developer",
-    location: "Bengaluru",
-    logo: "/metyis.png",
-  },
-];
-
 const EmployeHome = () => {
   const router = useRouter();
-  const [selectedJob, setSelectedJob] = useState(jobList[0]);
+  const [selectedJob, setSelectedJob] = useState(null);
+  const [jobList, setJobList] = useState([]);
   const [showMore, setShowMore] = useState(false);
   const [mobileDetailOpen, setMobileDetailOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const extraDescription = `Loram 5 Tablet is a combination medicine used to treat hypertension (high blood pressure). It helps to control blood pressure when a single medication is not effective. It also helps to reduce the chances of any future heart attack and stroke.`;
+
+  // Fetch job data from the API when the component mounts
+  useEffect(() => {
+    const fetchJobData = async () => {
+      try {
+        const response = await fetch("https://talent4startup.onrender.com/jobs");
+        const data = await response.json();
+        setJobList(data.posts); // Assuming the data is structured as { success: true, posts: [] }
+        setSelectedJob(data.posts[0]); // Set the first job as the default selected job
+      } catch (error) {
+        console.error("Error fetching job data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchJobData();
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="flex flex-col h-screen bg-gray-50">
@@ -88,39 +75,24 @@ const EmployeHome = () => {
                 setMobileDetailOpen(true);
               }}
               className={`border rounded-lg p-4 cursor-pointer relative flex gap-3 transition h-48 mb-4 ${
-                selectedJob.company === job.company
+                selectedJob?._id === job._id
                   ? "border-[#CD0A1A] bg-white shadow"
                   : "bg-white"
               }`}
             >
-              {job.logo && (
-                <Image
-                  src={job.logo}
-                  alt={job.company}
-                  width={40}
-                  height={40}
-                  className="rounded self-start"
-                />
-              )}
               <div className="flex flex-col justify-between flex-grow overflow-hidden">
                 <div>
                   <div className="flex justify-between items-start">
                     <div>
                       <div className="flex items-center gap-2">
-                        <p className="font-semibold text-[#555454]">{job.company}</p>
-                        {job.rating && <p className="text-sm">⭐ {job.rating}</p>}
+                        <p className="font-semibold text-[#555454]">{job.companyName}</p>
                       </div>
-                      <p className="font-bold">{job.role}</p>
-                      <p className="text-sm text-gray-600">{job.location}</p>
+                      <p className="font-bold">{job.jobTitle}</p>
+                      <p className="text-sm text-gray-600">{job.city}</p>
                       <p className="text-sm text-gray-600">{job.salary}</p>
                     </div>
-                    <div className="text-sm text-gray-400">{job.posted}</div>
+                    <div className="text-sm text-gray-400">{new Date(job.createdAt).toLocaleDateString()}</div>
                   </div>
-                  {job.easyApply && (
-                    <p className="text-[#CD0A1A] text-sm mt-2 font-medium">
-                      ⚡ Easy Apply
-                    </p>
-                  )}
                 </div>
               </div>
               <Bookmark className="absolute top-3 right-3 w-4 h-4 text-gray-400" />
@@ -134,32 +106,20 @@ const EmployeHome = () => {
             <>
               <div className="flex justify-between items-start">
                 <div>
-                  <div className="flex items-center gap-2">
-                    {selectedJob.logo && (
-                      <Image
-                        src={selectedJob.logo}
-                        alt={selectedJob.company}
-                        width={40}
-                        height={40}
-                        className="rounded"
-                      />
-                    )}
-                    <div>
-                      <p className="font-semibold text-[#555454]">{selectedJob.company}</p>
-                      {selectedJob.rating && (
-                        <p className="text-sm">⭐ {selectedJob.rating}</p>
-                      )}
-                    </div>
-                  </div>
-                  <h2 className="text-2xl font-bold mt-2 text-[#CD0A1A]">{selectedJob.role}</h2>
+                  <h2 className="text-2xl font-bold mt-2 text-[#CD0A1A]">{selectedJob.jobTitle}</h2>
                   <p className="text-sm text-gray-600">
-                    {selectedJob.location} · {selectedJob.salary}
+                    {selectedJob.city} · {selectedJob.salary}
                   </p>
                 </div>
                 <div className="flex items-center gap-3">
                   <MoreVertical className="text-gray-500" />
                   <Bookmark className="text-gray-500" />
-                  <button onClick={()=>router.push('/employeeuserside/applybuttonForms/contactform')}  className="bg-[#CD0A1A] text-white px-4 py-2 rounded-md cursor-pointer">
+                  <button
+                    onClick={() =>
+                      router.push("/employeeuserside/applybuttonForms/contactform")
+                    }
+                    className="bg-[#CD0A1A] text-white px-4 py-2 rounded-md cursor-pointer"
+                  >
                     Apply on employer site
                   </button>
                 </div>
@@ -198,24 +158,9 @@ const EmployeHome = () => {
           <div className="md:hidden fixed inset-0 bg-white z-50 p-4 overflow-y-auto">
             <div className="flex justify-between items-start">
               <div>
-                <div className="flex items-center gap-2">
-                  {selectedJob.logo && (
-                    <Image
-                      src={selectedJob.logo}
-                      alt={selectedJob.company}
-                      width={40}
-                      height={40}
-                      className="rounded"
-                    />
-                  )}
-                  <div>
-                    <p className="font-semibold text-[#555454]">{selectedJob.company}</p>
-                    {selectedJob.rating && <p className="text-sm">⭐ {selectedJob.rating}</p>}
-                  </div>
-                </div>
-                <h2 className="text-xl font-bold mt-2 text-[#CD0A1A]">{selectedJob.role}</h2>
+                <h2 className="text-xl font-bold mt-2 text-[#CD0A1A]">{selectedJob.jobTitle}</h2>
                 <p className="text-sm text-gray-600">
-                  {selectedJob.location} · {selectedJob.salary}
+                  {selectedJob.city} · {selectedJob.salary}
                 </p>
               </div>
               <X
@@ -248,7 +193,7 @@ const EmployeHome = () => {
                 {showMore ? "Show less ↑" : "Show more ↓"}
               </p>
 
-              <button  className="bg-[#CD0A1A] text-white mt-6 w-full py-2 rounded-md">
+              <button className="bg-[#CD0A1A] text-white mt-6 w-full py-2 rounded-md">
                 Apply on employer site
               </button>
             </div>

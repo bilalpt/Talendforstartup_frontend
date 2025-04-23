@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Menu,
   X,
@@ -18,7 +18,26 @@ import Image from 'next/image';
 
 export default function Dashboard() {
   const [isOpen, setIsOpen] = useState(true);
-  const route = useRouter();
+  const [tokenChecked, setTokenChecked] = useState(false);
+  const router = useRouter();
+
+  // ✅ Token check
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      router.push('/homepagesignup'); // redirect if token is missing
+    } else {
+      setTokenChecked(true);
+    }
+  }, []);
+
+  if (!tokenChecked) {
+    return (
+      <div className="flex items-center justify-center min-h-screen text-xl">
+        Checking authentication...
+      </div>
+    );
+  }
 
   const navItems = [
     { icon: <Briefcase />, label: 'Jobs', path: '/hruserside/jobformdetails' },
@@ -45,12 +64,12 @@ export default function Dashboard() {
         {/* Create New Button */}
         <div className="w-full mb-6">
           <li
-            onClick={() => route.push('/hruserside/employeeaccountsecond')}
+            onClick={() => router.push('/hruserside/employeeaccountsecond')}
             className="flex items-center gap-3 px-3 py-2 rounded 
               bg-white text-black font-bold cursor-pointer hover:bg-gray-200 transition-all
               justify-start"
           >
-            <span><Plus className="text-black" /></span>
+            <Plus className="text-black" />
             {isOpen && <span>Create New</span>}
           </li>
         </div>
@@ -62,7 +81,7 @@ export default function Dashboard() {
               key={i}
               onClick={() => {
                 if (item.path) {
-                  route.push(item.path);
+                  router.push(item.path);
                 }
               }}
               className={`flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 cursor-pointer 
@@ -77,7 +96,6 @@ export default function Dashboard() {
 
       {/* Main Content */}
       <main className="flex-1 bg-gray-100 p-6">
-        {/* Header */}
         <header className="flex justify-between items-center">
           <div>
             <h1 className="text-2xl font-semibold">Jobs</h1>
@@ -124,7 +142,7 @@ export default function Dashboard() {
             to your career website. Make it simpler. Hire faster.
           </p>
           <button
-            onClick={() => route.push('/hruserside/employeeaccountsecond')}
+            onClick={() => router.push('/hruserside/employeeaccountsecond')}
             className="mt-6 bg-[#CD0A1A] text-white px-6 py-2 rounded cursor-pointer"
           >
             Post a job

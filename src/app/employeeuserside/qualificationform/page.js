@@ -1,8 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation'; // Correctly import useRouter
 
 export default function QualificationsForm() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     work: { title: '', company: '', duration: '' },
     education: { degree: '', institution: '', year: '' },
@@ -11,6 +13,14 @@ export default function QualificationsForm() {
     cert: { name: '', org: '' },
     lang: { name: '', level: '' },
   });
+
+  // Check for token and redirect if not present
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      router.push('/homepagesignup'); // Redirect to signup page if no token is found
+    }
+  }, [router]);
 
   const handleChange = (section, field, value) => {
     setFormData((prev) => ({
