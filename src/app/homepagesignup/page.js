@@ -36,7 +36,7 @@ export default function SignupPage() {
       if (response.ok) {
         setStatus('success');
         setMessage('OTP has been sent to your email.');
-        setIsOtpSent(true); // OTP is sent, now show OTP form
+        setIsOtpSent(true);
       } else {
         setStatus('error');
         setMessage(data.message || 'Something went wrong.');
@@ -68,8 +68,11 @@ export default function SignupPage() {
       console.log(data, 'OTP response');
 
       if (response.ok) {
-        // Save token
-        localStorage.setItem('token', data.token );
+        // Save token, userId, and userEmail to localStorage
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('userId', data.user.id);
+        localStorage.setItem('userEmail', data.user.email);
+
         setStatus('success');
         setMessage('OTP verified successfully. Redirecting...');
 
@@ -178,10 +181,11 @@ export default function SignupPage() {
           </p>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto px-4">
-            {[['Join your work community', <FaComments />],
+            {[
+              ['Join your work community', <FaComments />],
               ['Find and apply to jobs', <FaClipboardList />],
               ['Search company reviews', <FaBuilding />],
-              ['Compare salaries', <FaMoneyBillWave />]
+              ['Compare salaries', <FaMoneyBillWave />],
             ].map(([label, icon], i) => (
               <div key={i} className="flex flex-col items-center">
                 <div className="border border-black rounded-full p-4 text-green-600">
