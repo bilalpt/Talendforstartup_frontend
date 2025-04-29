@@ -87,7 +87,6 @@ export default function JobBasicsForm() {
       });
 
       const result = await response.json();
-      console.log(result,'3333333333333333333333333');
       
 
       if (!response.ok) {

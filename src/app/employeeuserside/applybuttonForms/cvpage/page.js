@@ -5,16 +5,35 @@ import { ArrowUpTrayIcon, DocumentArrowUpIcon } from '@heroicons/react/24/solid'
 
 export default function CVUploader() {
   const [cvFile, setCvFile] = useState(null);
+  const [existingCv, setExistingCv] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
+    const userId = localStorage.getItem('userId');
+
     if (!token) {
       router.push('/homepagesignup');
     } else {
       setIsAuthenticated(true);
+
+      if (userId) {
+        fetch(`https://talent4startup.onrender.com/users/resume/${userId}`)
+          .then((res) => {
+            if (!res.ok) throw new Error('No previous CV found.');
+            return res.blob();
+          })
+          .then((blob) => {
+            const existingCvUrl = URL.createObjectURL(blob);
+            setExistingCv(blob);
+            setPreviewUrl(existingCvUrl);
+          })
+          .catch((err) => {
+            console.log('No existing CV found:', err.message);
+          });
+      }
     }
   }, [router]);
 
@@ -24,29 +43,55 @@ export default function CVUploader() {
     setPreviewUrl(URL.createObjectURL(file));
   };
 
-  const handleSubmit = () => {
-    if (!cvFile) {
+  const handleSubmit = async () => {
+    const fileToSubmit = cvFile || existingCv;
+
+    if (!fileToSubmit) {
       alert('⚠️ Please upload your CV before submitting.');
       return;
     }
-    alert('✅ CV Submitted successfully!');
-    router.push('/employeeuserside/applybuttonForms/experienceform');
+
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+      alert('❌ User ID not found in local storage.');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('userId', userId);
+    formData.append('resume', fileToSubmit);
+
+    try {
+      const response = await fetch('https://talent4startup.onrender.com/users/user-resume', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Upload failed. Please try again.');
+      }
+
+      alert('✅ CV Submitted successfully!');
+      router.push('/employeeuserside/applybuttonForms/experienceform');
+    } catch (error) {
+      alert(`❌ Error: ${error.message}`);
+    }
   };
 
   if (!isAuthenticated) {
-    return null; // Optional: loading spinner
+    return null;
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 py-12 px-4 flex flex-col items-center">
-      <h1 className="text-4xl font-bold text-gray-800 mb-8 text-center">Upload Your CV</h1>
+    <div className="min-h-screen bg-red-50 py-12 px-4 flex flex-col items-center">
+      <h1 className="text-4xl font-bold text-red-800 mb-8 text-center">Upload Your CV</h1>
 
       <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* CV Upload */}
-        <div className="bg-white rounded-2xl shadow-lg p-6">
+        <div className="bg-white rounded-2xl shadow-lg p-6 border border-red-100">
           <div className="mb-4">
-            <label className="block text-lg font-medium text-gray-700 mb-2">Upload PDF</label>
-            <label className="flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed border-blue-400 text-blue-700 rounded-xl cursor-pointer bg-blue-50 hover:bg-blue-100 transition">
+            <label className="block text-lg font-medium text-red-700 mb-2">Upload PDF</label>
+            <label className="flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed border-red-400 text-red-700 rounded-xl cursor-pointer bg-red-50 hover:bg-red-100 transition">
               <DocumentArrowUpIcon className="w-6 h-6" />
               <span className="font-medium">
                 {cvFile ? cvFile.name : 'Choose File'}
@@ -70,11 +115,11 @@ export default function CVUploader() {
         </div>
 
         {/* Job Description */}
-        <div className="bg-white rounded-2xl shadow-lg p-6">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-1">Full Stack Developer</h2>
-          <p className="text-gray-500 mb-4">Magenta EV Solutions Pvt. Ltd - Bangalore, Karnataka</p>
+        <div className="bg-white rounded-2xl shadow-lg p-6 border border-red-100">
+          <h2 className="text-2xl font-semibold text-red-800 mb-1">Full Stack Developer</h2>
+          <p className="text-red-500 mb-4">Magenta EV Solutions Pvt. Ltd - Bangalore, Karnataka</p>
 
-          <div className="text-sm text-gray-700 space-y-3">
+          <div className="text-sm text-slate-700 space-y-3">
             <p className="leading-relaxed">
               We’re looking for a passionate full-stack developer with experience building modern web applications.
             </p>
@@ -85,7 +130,7 @@ export default function CVUploader() {
             </ul>
           </div>
 
-          <button className="mt-6 text-blue-600 hover:text-blue-800 font-medium underline transition">
+          <button className="mt-6 text-red-600 hover:text-red-800 font-medium underline transition">
             View full job description
           </button>
         </div>
@@ -94,9 +139,9 @@ export default function CVUploader() {
       {/* Submit Button */}
       <button
         onClick={handleSubmit}
-        className="mt-10 flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-full text-lg font-semibold transition"
+        className="mt-10 flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-full text-lg font-semibold transition cursor-pointer"
       >
-        <ArrowUpTrayIcon className="w-5 h-5" />
+        <ArrowUpTrayIcon className="w-5 h-5 cursor-pointer" />
         Submit CV
       </button>
     </div>

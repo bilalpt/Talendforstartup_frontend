@@ -11,13 +11,25 @@ const EmployeHome = () => {
   const [jobList, setJobList] = useState([]);
   const [mobileDetailOpen, setMobileDetailOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [userId, setUserId] = useState(null);
+
+  useEffect(() => {
+    // Retrieve userId from localStorage
+    const storedUserId = localStorage.getItem("userId");
+    
+    if (storedUserId) {
+      setUserId(storedUserId);
+    } else {
+      console.warn("User ID not found in localStorage.");
+      // Optionally redirect to login or show a message
+    }
+  }, []);
 
   useEffect(() => {
     const fetchJobData = async () => {
       try {
         const response = await fetch("https://talent4startup.onrender.com/jobs");
         const data = await response.json();
-        console.log(data.posts, 'home page details');
         setJobList(data.posts);
         setSelectedJob(data.posts[0]);
       } catch (error) {
@@ -29,6 +41,27 @@ const EmployeHome = () => {
 
     fetchJobData();
   }, []);
+
+  const handleApply = async () => {
+    if (!userId) {
+      console.error("User ID not available.");
+      return;
+    }
+
+    try {
+      const res = await fetch(`https://talent4startup.onrender.com/users/${userId}`);
+      const userData = await res.json();
+      console.log(userData,'this is the user data');
+      
+      if (userData.user.phone) {
+        router.push("/employeeuserside/applybuttonForms/cvpage");
+      } else {
+        router.push("/employeeuserside/applybuttonForms/contactform");
+      }
+    } catch (error) {
+      console.error("Error checking user phone:", error);
+    }
+  };
 
   if (loading) return <div>Loading...</div>;
 
@@ -87,7 +120,9 @@ const EmployeHome = () => {
                       <p className="text-sm text-gray-600"> {job.pincode}</p>
                       <p className="text-sm text-gray-600">Salary: ₹{job.salary}</p>
                     </div>
-                    <div className="text-sm text-gray-400">{new Date(job.createdAt).toLocaleDateString()}</div>
+                    <div className="text-sm text-gray-400">
+                      {new Date(job.createdAt).toLocaleDateString()}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -104,16 +139,14 @@ const EmployeHome = () => {
                 <div>
                   <h2 className="text-2xl font-bold mt-2 text-[#CD0A1A]">{selectedJob.jobTitle}</h2>
                   <p className="text-sm text-gray-600">
-                    {selectedJob.city} · {selectedJob.salary}
+                    {selectedJob.city} · ₹{selectedJob.salary}
                   </p>
                 </div>
                 <div className="flex items-center gap-3">
                   <MoreVertical className="text-gray-500" />
                   <Bookmark className="text-gray-500" />
                   <button
-                    onClick={() =>
-                      router.push("/employeeuserside/applybuttonForms/contactform")
-                    }
+                    onClick={handleApply}
                     className="bg-[#CD0A1A] text-white px-4 py-2 rounded-md cursor-pointer"
                   >
                     Apply on employer site
@@ -125,8 +158,6 @@ const EmployeHome = () => {
                 <p><strong>Company:</strong> {selectedJob.companyName}</p>
                 <p><strong>Location:</strong> {selectedJob.city} ({selectedJob.locationType})</p>
                 <p><strong>Street:</strong> {selectedJob.streetAddress}</p>
-                {/* <p><strong>Area:</strong> {selectedJob.area}</p>
-                <p><strong>Pincode:</strong> {selectedJob.pincode}</p> */}
                 <p><strong>Salary:</strong> ₹{selectedJob.salary}</p>
               </div>
 
@@ -147,7 +178,7 @@ const EmployeHome = () => {
               <div>
                 <h2 className="text-xl font-bold mt-2 text-[#CD0A1A]">{selectedJob.jobTitle}</h2>
                 <p className="text-sm text-gray-600">
-                  {selectedJob.city} · {selectedJob.salary}
+                  {selectedJob.city} · ₹{selectedJob.salary}
                 </p>
               </div>
               <X
@@ -173,9 +204,7 @@ const EmployeHome = () => {
 
               <button
                 className="bg-[#CD0A1A] text-white mt-6 w-full py-2 rounded-md"
-                onClick={() =>
-                  router.push("/employeeuserside/applybuttonForms/contactform")
-                }
+                onClick={handleApply}
               >
                 Apply on employer site
               </button>
