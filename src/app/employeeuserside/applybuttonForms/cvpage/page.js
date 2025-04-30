@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation'; //import useSearchParams
 import { ArrowUpTrayIcon, DocumentArrowUpIcon } from '@heroicons/react/24/solid';
 
 export default function CVUploader() {
@@ -9,6 +9,9 @@ export default function CVUploader() {
   const [previewUrl, setPreviewUrl] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const jobId = searchParams.get("jobId");
+  
 
   useEffect(() => {
     const token = localStorage.getItem('token');
