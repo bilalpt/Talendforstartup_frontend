@@ -1,10 +1,16 @@
 "use client";
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
+import { useRouter , useSearchParams } from 'next/navigation';
 
 export default function SubmitPage() {
   const [userData, setUserData] = useState(null);
   const [error, setError] = useState(null);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const jobId = searchParams.get("jobId");
+  console.log(jobId,'hey baxter this is submitpage ');
+  
 
   useEffect(() => {
     const userId = localStorage.getItem('userId');
@@ -24,6 +30,36 @@ export default function SubmitPage() {
     fetchUserData();
   }, []);
 
+  const handleSubmit = async () => {
+    const userId = localStorage.getItem("userId");
+
+    if (!userId || !jobId) {
+      alert("User ID or Job ID is missing.");
+      return;
+    }
+
+    try {
+      const response = await fetch("https://talent4startup.onrender.com/jobs/applys", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId, jobId }),        
+        
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to submit application");
+      }
+
+      // Navigate to success page
+      router.push("/employeeuserside/applybuttonForms/succespage");
+    } catch (err) {
+      console.error(err);
+      alert("Application submission failed. Please try again.");
+    }
+  };
+
   if (!userData) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   }
@@ -32,40 +68,6 @@ export default function SubmitPage() {
   const resumeUrl = resumeFilename
     ? `https://talent4startup.onrender.com/uploads/${resumeFilename}`
     : null;
-
-  // Force download if backend headers are missing
-  const downloadResume = async () => {
-    try {
-      if (!resumeUrl || resumeUrl.includes("undefined")) {
-        alert("Resume file is missing or invalid.");
-        return;
-      }
-
-      const response = await fetch(resumeUrl, {
-        method: 'GET',
-        headers: {
-          // Add headers here if required (CORS headers, Authorization, etc.)
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to download. HTTP Status: ${response.status}`);
-      }
-
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = resumeFilename || 'Resume.pdf';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error('Error downloading file:', error);
-      alert("Failed to download the resume. Please try again.");
-    }
-  };
 
   return (
     <>
@@ -92,9 +94,6 @@ export default function SubmitPage() {
                 <div>
                   <p className="text-sm text-gray-500">Email address</p>
                   <p className="font-semibold">{userData.user.email}</p>
-                  <p className="text-xs text-gray-500 mt-1">
-                    Your email address <em>may</em> be masked in accordance with talent4startup Terms and Privacy Policy.
-                  </p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-500">City, State</p>
@@ -143,19 +142,15 @@ export default function SubmitPage() {
                     className="w-6 h-6"
                   />
                 </div>
-             
-                  <button
-                    
-                    className="text-red-700 font-medium text-sm hover:underline"
-                  >
-                    CV 
-                  </button>
- 
+                <button className="text-red-700 font-medium text-sm hover:underline">CV</button>
               </div>
             </div>
 
             {/* Submit Button */}
-            <button className="w-full mt-6 flex items-center justify-center gap-2 bg-red-600 text-white font-semibold py-3 rounded-xl shadow-md hover:bg-red-700 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2 transition duration-300 cursor-pointer">
+            <button
+              onClick={handleSubmit}
+              className="w-full mt-6 flex items-center justify-center gap-2 bg-red-600 text-white font-semibold py-3 rounded-xl shadow-md hover:bg-red-700 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2 transition duration-300 cursor-pointer"
+            >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>

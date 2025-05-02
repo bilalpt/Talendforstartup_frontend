@@ -12,6 +12,7 @@ export default function CVUploader() {
   const searchParams = useSearchParams();
   const jobId = searchParams.get("jobId");
   
+  
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -75,7 +76,7 @@ export default function CVUploader() {
       }
 
       alert('✅ CV Submitted successfully!');
-      router.push('/employeeuserside/applybuttonForms/experienceform');
+      router.push(`/employeeuserside/applybuttonForms/experienceform?jobId=${jobId}`);
     } catch (error) {
       alert(`❌ Error: ${error.message}`);
     }

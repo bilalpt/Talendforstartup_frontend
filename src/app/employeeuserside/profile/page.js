@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { FiMail, FiPhone } from 'react-icons/fi';
 import { BsThreeDots } from 'react-icons/bs';
 import Navbar from '@/app/(navbar)/navbar/page';
@@ -8,24 +8,71 @@ import { useRouter } from 'next/navigation';
 
 export default function ProfilePage() {
   const router = useRouter();
+  const [user, setUser] = useState(null);
+  const [resumeData, setResumeData] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
+    const userId = localStorage.getItem('userId');
+
     if (!token) {
       router.push('/homepagesignup');
+      return;
     }
+
+    if (!userId) {
+      console.error('No userId found in localStorage');
+      return;
+    }
+
+    // Fetch user details
+    fetch(`https://talent4startup.onrender.com/users/${userId}`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error('Failed to fetch user data');
+        return res.json();
+      })
+      .then((data) => setUser(data.user))
+      .catch((err) => console.error(err));
+
+    // Fetch resume (as PDF blob or JSON)
+    fetch(`https://talent4startup.onrender.com/users/resume/${userId}`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(async (res) => {
+        const contentType = res.headers.get('content-type') || '';
+        if (contentType.includes('application/json')) {
+          const json = await res.json();
+          setResumeData(json.resume);
+        } else if (contentType.includes('application/pdf')) {
+          const blob = await res.blob();
+          const url = URL.createObjectURL(blob);
+          setResumeData({
+            name: 'Resume.pdf',
+            url: url,
+            added: 'Recently',
+          });
+        } else {
+          console.warn('Unsupported content type:', contentType);
+        }
+      })
+      .catch((err) => console.error('Error fetching resume:', err));
   }, []);
 
-  const user = {
-    name: 'Bilal PT',
-    email: 'bilalpt572@gmail.com',
-    phone: '062827 96425',
-    location: 'Calicut, Kerala, IN',
-    resume: {
-      name: 'bilalpt (3).pdf',
-      added: '7 Sept 2024',
-    },
-  };
+  if (!user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-[#F8F8F8] min-h-screen">
@@ -36,10 +83,12 @@ export default function ProfilePage() {
         <div className="bg-white rounded-lg p-6 shadow-2xl">
           <div className="flex flex-col items-center text-center">
             <div className="w-24 h-24 rounded-full bg-[#CD0A1A] text-white flex items-center justify-center text-3xl font-semibold mb-4 shadow">
-              {user.name.split(' ').map((n) => n[0]).join('')}
+              {user.name?.split(' ').map((n) => n[0]).join('')}
             </div>
-            <h2 className="text-xl font-bold text-[#555454]">{user.name}</h2>
-            <p className="text-sm text-[#555454] mt-1">{user.location}</p>
+            <h2 className="text-xl font-bold text-[#555454]">
+              {user.firstName} {user.lastName}
+            </h2>
+            <p className="text-sm text-[#555454] mt-1">{user.address}</p>
 
             <div className="mt-4 space-y-2 text-sm text-[#555454] w-full">
               <div className="flex items-center gap-2">
@@ -67,8 +116,22 @@ export default function ProfilePage() {
                   <span className="text-xs bg-[#CD0A1A] text-white px-2 py-0.5 rounded">PDF</span>
                 </div>
                 <div>
-                  <p className="font-medium text-[#555454]">{user.resume.name}</p>
-                  <p className="text-sm text-[#888888]">Added {user.resume.added}</p>
+                  <p className="font-medium text-[#555454]">
+                    {resumeData?.name || 'No Resume Uploaded'}
+                  </p>
+                  <p className="text-sm text-[#888888]">
+                    {resumeData?.added || 'N/A'}
+                  </p>
+                  {resumeData?.url && (
+                    <a
+                      href={resumeData.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-blue-600 underline mt-1 block"
+                    >
+                      View Resume
+                    </a>
+                  )}
                 </div>
               </div>
               <BsThreeDots className="text-[#555454] text-xl cursor-pointer" />

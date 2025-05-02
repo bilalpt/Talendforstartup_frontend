@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation'; // or 'next/router' if using pages directory
+import { useRouter,useSearchParams } from 'next/navigation'; // or 'next/router' if using pages directory
 
 export default function ExperienceFormPage() {
   const router = useRouter();
@@ -9,6 +9,10 @@ export default function ExperienceFormPage() {
   const [years, setYears] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userId, setUserId] = useState('');
+
+  const searchParams = useSearchParams();
+  const jobId = searchParams.get("jobId");
+  
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -48,7 +52,7 @@ export default function ExperienceFormPage() {
 
       if (response.ok) {
         alert('Experience submitted successfully!');
-        router.push('/employeeuserside/applybuttonForms/submitpage'); // ✅ Redirect after success
+        router.push(`/employeeuserside/applybuttonForms/submitpage?jobId=${jobId}`); // ✅ Redirect after success
       } else {
         alert('Error: ' + (data.message || 'Something went wrong'));
       }

@@ -1,9 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function ContactForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const jobId = searchParams.get("jobId");
 
   const [formData, setFormData] = useState({
     userId: "",
@@ -55,7 +57,8 @@ export default function ContactForm() {
       });
 
       if (response.ok) {
-        router.push("/employeeuserside/applybuttonForms/cvpage");
+        // Pass jobId in URL to the next page
+        router.push(`/employeeuserside/applybuttonForms/cvpage?jobId=${jobId}`);
       } else {
         console.error("Failed to submit form:", await response.text());
       }
