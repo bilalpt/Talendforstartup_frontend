@@ -1,6 +1,13 @@
+'use client';
 // pages/confirmation.tsx
+import { useRouter } from 'next/navigation';
+
 
 export default function ConfirmationPage() {
+    const router = useRouter();
+    const handleClick = () => {
+        router.push('/');
+    };
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
             <div className="max-w-md w-full bg-white shadow-md rounded-xl p-8 text-center">
@@ -33,9 +40,13 @@ export default function ConfirmationPage() {
                     To keep track of your applications, go to{' '}
                     <a href="#" className="text-blue-600 underline">MyJobs</a>.
                 </p>
-                <button className="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                <button
+                    onClick={handleClick}
+                    className="w-full py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition cursor-pointer"
+                >
                     Return to job search
                 </button>
+
             </div>
         </div>
     );

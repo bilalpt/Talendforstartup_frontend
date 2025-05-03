@@ -1,24 +1,24 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation'; // Correctly import useRouter
+import { useRouter } from 'next/navigation';
 
 export default function QualificationsForm() {
   const router = useRouter();
   const [formData, setFormData] = useState({
-    work: { title: '', company: '', duration: '' },
     education: { degree: '', institution: '', year: '' },
-    skill: { name: '', level: '' },
-    licence: { name: '', authority: '' },
+    skillInput: '',
+    skills: [],
     cert: { name: '', org: '' },
-    lang: { name: '', level: '' },
+    languages: [],
   });
+  console.log(formData,'this is the quali');
+  
 
-  // Check for token and redirect if not present
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
-      router.push('/homepagesignup'); // Redirect to signup page if no token is found
+      router.push('/homepagesignup');
     }
   }, [router]);
 
@@ -32,11 +32,73 @@ export default function QualificationsForm() {
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Submitted Data:', formData);
-    alert('Form Submitted! Check console for output.');
+  const handleLangCheckboxChange = (language) => {
+    setFormData((prev) => {
+      const isChecked = prev.languages.includes(language);
+      return {
+        ...prev,
+        languages: isChecked
+          ? prev.languages.filter((lang) => lang !== language)
+          : [...prev.languages, language],
+      };
+    });
   };
+
+  const handleSkillInputChange = (val) => {
+    setFormData((prev) => ({
+      ...prev,
+      skillInput: val,
+    }));
+  };
+
+  const handleAddSkill = () => {
+    const trimmedSkill = formData.skillInput.trim();
+    if (trimmedSkill && !formData.skills.includes(trimmedSkill)) {
+      setFormData((prev) => ({
+        ...prev,
+        skills: [...prev.skills, trimmedSkill],
+        skillInput: '',
+      }));
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const userId = localStorage.getItem('userId'); // Ensure the userId is saved in localStorage
+    const payload = {
+      userId: userId,  // Pass userId here
+      education: formData.education,
+      skill: formData.skills,
+      cert: formData.cert,
+      lang: formData.languages,
+    };
+
+    try {
+      const res = await fetch('https://talent4startup.onrender.com/users/user-profile', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) throw new Error('Failed to update');
+
+      alert('Form updated successfully!');
+    } catch (err) {
+      console.error('Error submitting form:', err);
+      alert('Update failed. Check console for details.');
+    }
+  };
+
+  const languages = [
+    'English', 'Assamese', 'Bengali', 'Bodo', 'Dogri', 'Gujarati', 'Hindi', 'Kannada',
+    'Kashmiri', 'Konkani', 'Maithili', 'Malayalam', 'Manipuri', 'Marathi',
+    'Nepali', 'Odia', 'Punjabi', 'Sanskrit', 'Santali', 'Sindhi', 'Tamil',
+    'Telugu', 'Urdu'
+  ];
 
   return (
     <section className="max-w-3xl mx-auto my-12 p-8 sm:p-10 bg-white border border-gray-300 shadow-2xl rounded-lg">
@@ -45,13 +107,6 @@ export default function QualificationsForm() {
       </h1>
 
       <form onSubmit={handleSubmit} className="space-y-10">
-
-        <Section title="Work Experience">
-          <InputField label="Job Title" value={formData.work.title} onChange={(val) => handleChange('work', 'title', val)} />
-          <InputField label="Company" value={formData.work.company} onChange={(val) => handleChange('work', 'company', val)} />
-          <InputField label="Duration" value={formData.work.duration} onChange={(val) => handleChange('work', 'duration', val)} />
-        </Section>
-
         <Section title="Education">
           <InputField label="Degree" value={formData.education.degree} onChange={(val) => handleChange('education', 'degree', val)} />
           <InputField label="Institution" value={formData.education.institution} onChange={(val) => handleChange('education', 'institution', val)} />
@@ -59,8 +114,29 @@ export default function QualificationsForm() {
         </Section>
 
         <Section title="Skills">
-          <InputField label="Skill Name" value={formData.skill.name} onChange={(val) => handleChange('skill', 'name', val)} />
-          <InputField label="Proficiency Level" value={formData.skill.level} onChange={(val) => handleChange('skill', 'level', val)} />
+          <div className="sm:col-span-2 flex items-center gap-4">
+            <input
+              type="text"
+              value={formData.skillInput}
+              onChange={(e) => handleSkillInputChange(e.target.value)}
+              placeholder="Enter a skill"
+              className="flex-1 px-4 py-2 border border-[#ccc] rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#CD0A1A] text-sm"
+            />
+            <button
+              type="button"
+              onClick={handleAddSkill}
+              className="bg-[#CD0A1A] text-white px-4 py-2 rounded-md hover:bg-[#a50915] text-sm"
+            >
+              Add
+            </button>
+          </div>
+          {formData.skills.length > 0 && (
+            <ul className="sm:col-span-2 mt-3 list-disc list-inside text-sm text-gray-800">
+              {formData.skills.map((skill, idx) => (
+                <li key={idx}>{skill}</li>
+              ))}
+            </ul>
+          )}
         </Section>
 
         <Section title="Certifications">
@@ -69,8 +145,26 @@ export default function QualificationsForm() {
         </Section>
 
         <Section title="Languages">
-          <InputField label="Language" value={formData.lang.name} onChange={(val) => handleChange('lang', 'name', val)} />
-          <InputField label="Fluency Level" value={formData.lang.level} onChange={(val) => handleChange('lang', 'level', val)} />
+          <div className="mb-4 sm:col-span-2">
+            <label className="block text-sm font-medium text-[#555454] mb-2">Languages Known</label>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+              {languages.map((language, idx) => (
+                <label
+                  key={idx}
+                  className="flex items-center gap-2 px-3 py-2 bg-gray-50 border border-gray-300 rounded-md shadow-sm hover:bg-gray-100 cursor-pointer transition"
+                >
+                  <input
+                    type="checkbox"
+                    value={language}
+                    checked={formData.languages.includes(language)}
+                    onChange={() => handleLangCheckboxChange(language)}
+                    className="accent-[#CD0A1A] w-4 h-4"
+                  />
+                  <span className="text-sm text-gray-800">{language}</span>
+                </label>
+              ))}
+            </div>
+          </div>
         </Section>
 
         <div className="text-center">
