@@ -13,6 +13,8 @@ const EmployeHome = () => {
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState(null);
   const [userApplications, setUserApplications] = useState([]);
+  const [qualification, setQualification] = useState(null);
+
 
   useEffect(() => {
     const storedUserId = localStorage.getItem("userId");
@@ -41,24 +43,28 @@ const EmployeHome = () => {
   }, []);
 
   useEffect(() => {
-    const fetchApplications = async () => {
+    const fetchApplicationsAndProfile = async () => {
       if (!userId) return;
+
       try {
-        const response = await fetch(`https://talent4startup.onrender.com/jobs/application/${userId}`);
-        const data = await response.json();
-        // FIX: Extract the applications array properly
-        if (data.success && Array.isArray(data.applications)) {
-          setUserApplications(data.applications);
-        } else {
-          setUserApplications([]);
+        // Fetch applications
+        const appsRes = await fetch(`https://talent4startup.onrender.com/jobs/application/${userId}`);
+        const appsData = await appsRes.json();
+        setUserApplications(Array.isArray(appsData.applications) ? appsData.applications : []);
+
+        // Fetch profile (qualification)
+        const profileRes = await fetch(`https://talent4startup.onrender.com/users/user-profile/${userId}`);
+        const profileData = await profileRes.json();
+
+        if (profileData?.data?._id) {
+          setQualification(profileData.data._id);
         }
       } catch (error) {
-        console.error("Error fetching user applications:", error);
-        setUserApplications([]);
+        console.error("Error fetching user data:", error);
       }
     };
 
-    fetchApplications();
+    fetchApplicationsAndProfile();
   }, [userId]);
 
   const isJobApplied = (jobId) => {
@@ -97,19 +103,11 @@ const EmployeHome = () => {
       <div className="flex flex-col md:flex-row items-center justify-center gap-2 p-4">
         <div className="flex items-center bg-gray-100 rounded-full px-4 py-2 w-full max-w-xl">
           <span className="text-[#CD0A1A] mr-2">🔍</span>
-          <input
-            type="text"
-            placeholder="Find your perfect job"
-            className="bg-transparent outline-none flex-1 text-[#555454]"
-          />
+          <input type="text" placeholder="Find your perfect job" className="bg-transparent outline-none flex-1 text-[#555454]" />
         </div>
         <div className="flex items-center bg-gray-100 rounded-full px-4 py-2 w-full md:w-48">
           <span className="text-[#CD0A1A] mr-2">📍</span>
-          <input
-            type="text"
-            placeholder="Location"
-            className="bg-transparent outline-none flex-1 text-[#555454]"
-          />
+          <input type="text" placeholder="Location" className="bg-transparent outline-none flex-1 text-[#555454]" />
         </div>
       </div>
 
@@ -126,9 +124,8 @@ const EmployeHome = () => {
                   setSelectedJob(job);
                   setMobileDetailOpen(true);
                 }}
-                className={`border rounded-lg p-4 cursor-pointer relative flex gap-3 transition h-auto mb-4 ${
-                  selectedJob?._id === job._id ? "border-[#CD0A1A] bg-white shadow" : "bg-white"
-                } ${applied ? "border-green-500" : ""}`}
+                className={`border rounded-lg p-4 cursor-pointer relative flex gap-3 transition h-auto mb-4 ${selectedJob?._id === job._id ? "border-[#CD0A1A] bg-white shadow" : "bg-white"
+                  } ${applied ? "border-green-500" : ""}`}
               >
                 <div className="flex flex-col justify-between flex-grow overflow-hidden">
                   <div>
@@ -144,9 +141,7 @@ const EmployeHome = () => {
                         <p className="text-sm text-gray-600">{job.pincode}</p>
                         <p className="text-sm text-gray-600">Salary: ₹{job.salary}</p>
                       </div>
-                      <div className="text-sm text-gray-400">
-                        {new Date(job.createdAt).toLocaleDateString()}
-                      </div>
+                      <div className="text-sm text-gray-400">{new Date(job.createdAt).toLocaleDateString()}</div>
                     </div>
                     {applied && (
                       <span className="text-green-600 text-xs font-semibold mt-2 inline-block">
@@ -168,9 +163,7 @@ const EmployeHome = () => {
               <div className="flex justify-between items-start">
                 <div>
                   <h2 className="text-2xl font-bold mt-2 text-[#CD0A1A]">{selectedJob.jobTitle}</h2>
-                  <p className="text-sm text-gray-600">
-                    {selectedJob.city} · ₹{selectedJob.salary}
-                  </p>
+                  <p className="text-sm text-gray-600">{selectedJob.city} · ₹{selectedJob.salary}</p>
                 </div>
                 <div className="flex items-center gap-3">
                   <MoreVertical className="text-gray-500" />
@@ -180,10 +173,7 @@ const EmployeHome = () => {
                       Already Applied
                     </button>
                   ) : (
-                    <button
-                      onClick={handleApply}
-                      className="px-4 py-2 rounded-md bg-[#CD0A1A] text-white cursor-pointer"
-                    >
+                    <button onClick={handleApply} className="px-4 py-2 rounded-md bg-[#CD0A1A] text-white cursor-pointer">
                       Apply on employer site
                     </button>
                   )}
@@ -213,9 +203,7 @@ const EmployeHome = () => {
             <div className="flex justify-between items-start">
               <div>
                 <h2 className="text-xl font-bold mt-2 text-[#CD0A1A]">{selectedJob.jobTitle}</h2>
-                <p className="text-sm text-gray-600">
-                  {selectedJob.city} · ₹{selectedJob.salary}
-                </p>
+                <p className="text-sm text-gray-600">{selectedJob.city} · ₹{selectedJob.salary}</p>
               </div>
               <X className="text-gray-500 w-6 h-6" onClick={() => setMobileDetailOpen(false)} />
             </div>
@@ -227,6 +215,7 @@ const EmployeHome = () => {
               <p><strong>Area:</strong> {selectedJob.area}</p>
               <p><strong>Pincode:</strong> {selectedJob.pincode}</p>
               <p><strong>Salary:</strong> ₹{selectedJob.salary}</p>
+              {/* {qualification && <p><strong>Your Qualification:</strong> {qualification}</p>} */}
             </div>
 
             <div className="mt-6">
@@ -236,20 +225,19 @@ const EmployeHome = () => {
               </p>
 
               {isJobApplied(selectedJob._id) ? (
-                <button
-                  className="mt-6 w-full py-2 rounded-md bg-gray-300 text-gray-500 cursor-not-allowed"
-                  disabled
-                >
+                <button className="px-4 py-2 rounded-md bg-gray-300 text-gray-500 cursor-not-allowed">
                   Already Applied
                 </button>
-              ) : (
-                <button
-                  onClick={handleApply}
-                  className="mt-6 w-full py-2 rounded-md bg-[#CD0A1A] text-white"
-                >
+              ) : qualification ? (
+                <button onClick={handleApply} className="px-4 py-2 rounded-md bg-[#CD0A1A] text-white cursor-pointer">
                   Apply on employer site
                 </button>
+              ) : (
+                <button className="px-4 py-2 rounded-md bg-[#CD0A1A] text-white cursor-pointer">
+                  Apply on employer site 000
+                </button>
               )}
+
             </div>
           </div>
         )}

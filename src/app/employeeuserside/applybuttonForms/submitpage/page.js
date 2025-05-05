@@ -9,7 +9,6 @@ export default function SubmitPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const jobId = searchParams.get("jobId");
-  console.log(jobId,'hey baxter this is submitpage ');
   
 
   useEffect(() => {
