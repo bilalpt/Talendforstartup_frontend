@@ -68,7 +68,6 @@ export default function SignupPage() {
       console.log(data, 'OTP response');
 
       if (response.ok) {
-        // Save token, userId, and userEmail to localStorage
         localStorage.setItem('token', data.token);
         localStorage.setItem('userId', data.user.id);
         localStorage.setItem('userEmail', data.user.email);
@@ -76,7 +75,6 @@ export default function SignupPage() {
         setStatus('success');
         setMessage('OTP verified successfully. Redirecting...');
 
-        // Redirect to home page
         setTimeout(() => {
           window.location.href = '/';
         }, 1500);
@@ -103,11 +101,11 @@ export default function SignupPage() {
 
           {/* Form */}
           <div className="w-full md:w-1/3 text-center space-y-6">
-            <h1 className="text-3xl font-bold text-green-600">Your work people are here</h1>
+            <h1 className="text-3xl font-bold text-red-600">Your work people are here</h1>
             <p className="text-sm text-gray-600">
               By continuing, you agree to our{' '}
-              <a href="#" className="text-blue-600 underline">Terms of Use</a> and{' '}
-              <a href="#" className="text-blue-600 underline">Privacy Policy</a>.
+              <a href="#" className="text-red-600 underline">Terms of Use</a> and{' '}
+              <a href="#" className="text-red-600 underline">Privacy Policy</a>.
             </p>
 
             <button className="w-full py-3 px-4 border border-gray-300 rounded-md flex items-center justify-center space-x-2 hover:bg-gray-100">
@@ -130,19 +128,19 @@ export default function SignupPage() {
                 setStatus('idle');
                 setMessage('');
               }}
-              className="w-full px-4 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-4 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
             />
 
             <button
               onClick={handleEmailSubmit}
               disabled={status === 'loading'}
-              className="w-full py-3 px-4 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50"
+              className="w-full py-3 px-4 bg-red-600 text-white rounded-md hover:bg-red-700 disabled:opacity-50"
             >
               {status === 'loading' ? 'Sending OTP...' : 'Continue with email'}
             </button>
 
             {message && (
-              <p className={`text-sm ${status === 'success' ? 'text-green-600' : 'text-red-600'}`}>
+              <p className={`text-sm ${status === 'success' ? 'text-red-600' : 'text-red-600'}`}>
                 {message}
               </p>
             )}
@@ -154,12 +152,12 @@ export default function SignupPage() {
                   placeholder="Enter OTP"
                   value={otp}
                   onChange={(e) => setOtp(e.target.value)}
-                  className="w-full px-4 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full px-4 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
                 />
                 <button
                   onClick={handleOtpSubmit}
                   disabled={status === 'loading'}
-                  className="w-full py-3 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 mt-4"
+                  className="w-full py-3 px-4 bg-red-600 text-white rounded-md hover:bg-red-700 disabled:opacity-50 mt-4"
                 >
                   {status === 'loading' ? 'Verifying OTP...' : 'Verify OTP'}
                 </button>
@@ -175,7 +173,7 @@ export default function SignupPage() {
 
         {/* Feature Section */}
         <section className="py-16 bg-white text-center w-full">
-          <h2 className="text-2xl font-bold mb-4">Get ahead with Glassdoor</h2>
+          <h2 className="text-2xl font-bold mb-4">Get ahead with Talents 4 Startup</h2>
           <p className="text-gray-600 max-w-xl mx-auto mb-10">
             We're serving up trusted insights and anonymous conversation, so you'll have the goods you need to succeed.
           </p>
@@ -188,7 +186,7 @@ export default function SignupPage() {
               ['Compare salaries', <FaMoneyBillWave />],
             ].map(([label, icon], i) => (
               <div key={i} className="flex flex-col items-center">
-                <div className="border border-black rounded-full p-4 text-green-600">
+                <div className="border border-black rounded-full p-4 text-red-600">
                   {icon}
                 </div>
                 <p className="mt-4 font-medium">{label}</p>

@@ -12,8 +12,8 @@ export default function QualificationsForm() {
     cert: { name: '', org: '' },
     languages: [],
   });
-  console.log(formData,'this is the quali');
-  
+  console.log(formData, 'this is the quali');
+
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -75,7 +75,7 @@ export default function QualificationsForm() {
     };
 
     try {
-      const res = await fetch('https://talent4startup.onrender.com/users/user-profile', {
+      const res = await fetch('https://talent4startup.onrender.com/users/user-qualification', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -169,7 +169,7 @@ export default function QualificationsForm() {
 
         <div className="text-center">
           <button
-            type="submit"
+            onClick={() => router.push('/')}
             className="bg-[#CD0A1A] hover:bg-[#a50915] text-white font-semibold py-3 px-10 rounded-md transition duration-300 shadow-sm"
           >
             Submit

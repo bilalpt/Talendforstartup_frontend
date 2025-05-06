@@ -15,6 +15,9 @@ const EmployeHome = () => {
   const [userApplications, setUserApplications] = useState([]);
   const [qualification, setQualification] = useState(null);
 
+  console.log(qualification,'this is qualificationfrom');
+  
+
 
   useEffect(() => {
     const storedUserId = localStorage.getItem("userId");
@@ -53,11 +56,11 @@ const EmployeHome = () => {
         setUserApplications(Array.isArray(appsData.applications) ? appsData.applications : []);
 
         // Fetch profile (qualification)
-        const profileRes = await fetch(`https://talent4startup.onrender.com/users/user-profile/${userId}`);
+        const profileRes = await fetch(`https://talent4startup.onrender.com/users/user-qualification/${userId}`);
         const profileData = await profileRes.json();
 
         if (profileData?.data?._id) {
-          setQualification(profileData.data._id);
+          setQualification(profileData);
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -172,11 +175,14 @@ const EmployeHome = () => {
                     <button className="px-4 py-2 rounded-md bg-gray-300 text-gray-500 cursor-not-allowed">
                       Already Applied
                     </button>
-                  ) : (
+                  ) : qualification !== null ? (
                     <button onClick={handleApply} className="px-4 py-2 rounded-md bg-[#CD0A1A] text-white cursor-pointer">
-                      Apply on employer site
+                      Apply on employer site 
                     </button>
-                  )}
+                    
+                  ):<button onClick={() => router.push('/employeeuserside/qualificationform')} className="px-4 py-2 rounded-md bg-[#CD0A1A] text-white cursor-pointer">
+                    Apply on employer site 
+                  </button> }
                 </div>
               </div>
 
@@ -228,13 +234,19 @@ const EmployeHome = () => {
                 <button className="px-4 py-2 rounded-md bg-gray-300 text-gray-500 cursor-not-allowed">
                   Already Applied
                 </button>
-              ) : qualification ? (
-                <button onClick={handleApply} className="px-4 py-2 rounded-md bg-[#CD0A1A] text-white cursor-pointer">
-                  Apply on employer site
+              ) : qualification !== null ? (
+                <button
+                  onClick={handleApply}
+                  className="px-4 py-2 rounded-md bg-[#CD0A1A] text-white cursor-pointer"
+                >
+                  Apply on employer site 
                 </button>
               ) : (
-                <button className="px-4 py-2 rounded-md bg-[#CD0A1A] text-white cursor-pointer">
-                  Apply on employer site 000
+                <button
+                  onClick={() => router.push('/employeeuserside/qualificationform')}
+                  className="px-4 py-2 rounded-md bg-[#CD0A1A] text-white cursor-pointer"
+                >
+                  Apply on employer site 
                 </button>
               )}
 
