@@ -14,8 +14,8 @@ const EmployeHome = () => {
   const [userId, setUserId] = useState(null);
   const [userApplications, setUserApplications] = useState([]);
   const [qualification, setQualification] = useState(null);
-
-  console.log(qualification,'this is qualificationfrom');
+  
+  
   
 
 
@@ -33,6 +33,7 @@ const EmployeHome = () => {
       try {
         const response = await fetch("https://talent4startup.onrender.com/jobs");
         const data = await response.json();
+        
         setJobList(data.posts);
         setSelectedJob(data.posts[0]);
       } catch (error) {
@@ -52,13 +53,12 @@ const EmployeHome = () => {
       try {
         // Fetch applications
         const appsRes = await fetch(`https://talent4startup.onrender.com/jobs/application/${userId}`);
-        const appsData = await appsRes.json();
+        const appsData = await appsRes.json();        
         setUserApplications(Array.isArray(appsData.applications) ? appsData.applications : []);
 
         // Fetch profile (qualification)
         const profileRes = await fetch(`https://talent4startup.onrender.com/users/user-qualification/${userId}`);
         const profileData = await profileRes.json();
-
         if (profileData?.data?._id) {
           setQualification(profileData);
         }
@@ -84,8 +84,7 @@ const EmployeHome = () => {
 
     try {
       const res = await fetch(`https://talent4startup.onrender.com/users/${userId}`);
-      const userData = await res.json();
-
+      const userData = await res.json();      
       if (userData?.user?.phone) {
         router.push(`/employeeuserside/applybuttonForms/cvpage?jobId=${selectedJob._id}`);
       } else {
