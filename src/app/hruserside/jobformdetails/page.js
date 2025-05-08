@@ -6,96 +6,66 @@ import { Briefcase, Calendar, MapPin, Trash2 } from 'lucide-react';
 
 export default function JobFormDetails() {
   const router = useRouter();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
   const [expandedJobId, setExpandedJobId] = useState(null);
-  const [editingJobId, setEditingJobId] = useState(null);
-  const [editedJob, setEditedJob] = useState({});
+  const [appliedJobs, setAppliedJobs] = useState([]);
+  
+  const itemsPerPage = 3;
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = Math.ceil(appliedJobs.length / itemsPerPage);
+
+  const currentJobs = appliedJobs.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    if (!token) {
-      router.push('/homepagesignup'); 
+    const userId = localStorage.getItem('userId');
+
+    if (!token || !userId) {
+      router.push('/homepagesignup');
     } else {
-      setIsAuthenticated(true);
+      fetch(`https://talent4startup.onrender.com/jobs/${userId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res) => {
+          if (!res.ok) throw new Error('Failed to fetch job data');
+          return res.json();
+        })
+        .then((data) => {
+          if (Array.isArray(data)) {
+            setAppliedJobs(data);
+          } else if (Array.isArray(data.jobs)) {
+            setAppliedJobs(data.jobs);
+          } else {
+            console.error('Unexpected response format:', data);
+            setAppliedJobs([]);
+          }
+        })
+        .catch((err) => {
+          console.error('Error fetching jobs:', err);
+        });
     }
   }, []);
 
-  const [appliedJobs, setAppliedJobs] = useState([
-    {
-      id: 1,
-      title: 'Frontend Developer',
-      company: 'Techie Solutions',
-      location: 'Kochi, Kerala',
-      appliedDate: 'April 20, 2025',
-      status: 'Under Review',
-      jobDescription:
-        'As a Frontend Developer, you will be responsible for building the user interface for various web applications using React and JavaScript.',
-    },
-    {
-      id: 2,
-      title: 'Backend Developer',
-      company: 'CodeCraft Ltd.',
-      location: 'Bangalore, Karnataka',
-      appliedDate: 'April 18, 2025',
-      status: 'Interview Scheduled',
-      jobDescription:
-        'As a Backend Developer, you will be responsible for building and maintaining the server-side logic of web applications.',
-    },
-  ]);
-
-  const itemsPerPage = 3;
-  const [currentPage, setCurrentPage] = useState(1);
-
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentJobs = appliedJobs.slice(startIndex, startIndex + itemsPerPage);
-  const totalPages = Math.ceil(appliedJobs.length / itemsPerPage);
-
   const getStatusColor = (status) => {
     switch (status) {
-      case 'Under Review':
-        return 'bg-yellow-500';
-      case 'Interview Scheduled':
-        return 'bg-blue-600';
+      case 'Applied':
+        return 'bg-blue-500';
+      case 'Interviewed':
+        return 'bg-green-500';
       case 'Rejected':
-        return 'bg-red-600';
-      case 'Selected':
-        return 'bg-green-600';
+        return 'bg-red-500';
+      case 'Offered':
+        return 'bg-yellow-500';
       default:
         return 'bg-gray-500';
     }
-  };
-
-  const toggleDetails = (id) => {
-    setExpandedJobId(expandedJobId === id ? null : id);
-    setEditingJobId(null);
-  };
-
-  const handleEdit = (job) => {
-    setEditingJobId(job.id);
-    setEditedJob({ ...job });
-  };
-
-  const handleSave = () => {
-    const updatedJobs = appliedJobs.map((job) =>
-      job.id === editedJob.id ? editedJob : job
-    );
-    setAppliedJobs(updatedJobs);
-    setEditingJobId(null);
-    setExpandedJobId(editedJob.id);
-  };
-
-  const handleDelete = (id) => {
-    const updatedJobs = appliedJobs.filter((job) => job.id !== id);
-    setAppliedJobs(updatedJobs);
-    setExpandedJobId(null);
-    if ((currentPage - 1) * itemsPerPage >= updatedJobs.length) {
-      setCurrentPage(currentPage - 1 || 1);
-    }
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setEditedJob({ ...editedJob, [name]: value });
   };
 
   const handlePageChange = (page) => {
@@ -104,8 +74,18 @@ export default function JobFormDetails() {
     }
   };
 
-  // Wait until authenticated
-  if (!isAuthenticated) return null;
+  const toggleDetails = (jobId) => {
+    setExpandedJobId(expandedJobId === jobId ? null : jobId);
+  };
+
+  const handleDelete = (jobId) => {
+    const updatedJobs = appliedJobs.filter((job) => job.id !== jobId);
+    setAppliedJobs(updatedJobs);
+  };
+
+  const handleEdit = (job) => {
+    console.log('Editing job:', job);
+  };
 
   return (
     <div className="min-h-screen bg-[#f9f9f9] p-6">
@@ -116,27 +96,27 @@ export default function JobFormDetails() {
 
         {currentJobs.length > 0 ? (
           <div className="space-y-6">
-            {currentJobs.map((job) => (
+            {currentJobs.map((job, index) => (
               <div
-                key={job.id}
+                key={job._id || `job-${index}`}
                 className="bg-white rounded-xl shadow-md border border-gray-200 p-6 hover:shadow-lg transition-all"
               >
                 <div className="flex flex-col md:flex-row md:justify-between md:items-center">
                   <div>
                     <h2 className="text-xl font-semibold text-gray-800">
-                      {job.title}
+                      {job.jobTitle}
                     </h2>
                     <p className="text-sm text-gray-600 flex items-center gap-2 mt-1">
                       <Briefcase className="w-4 h-4" />
-                      {job.company}
+                      {job.companyName}
                     </p>
                     <p className="text-sm text-gray-600 flex items-center gap-2">
                       <MapPin className="w-4 h-4" />
-                      {job.location}
+                      {job.city}, {job.pincode}
                     </p>
                     <p className="text-sm text-gray-600 flex items-center gap-2">
                       <Calendar className="w-4 h-4" />
-                      Applied on {job.appliedDate}
+                      Applied on {job.appliedDate || 'N/A'}
                     </p>
                   </div>
 
@@ -146,10 +126,10 @@ export default function JobFormDetails() {
                         job.status
                       )}`}
                     >
-                      {job.status}
+                      {job.status || 'Pending'}
                     </span>
                     <button
-                      onClick={() => handleDelete(job.id)}
+                      onClick={() => handleDelete(job._id)}
                       className="flex items-center gap-1 text-red-600 hover:text-red-800 text-sm"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -159,20 +139,26 @@ export default function JobFormDetails() {
                 </div>
 
                 <button
-                  onClick={() => toggleDetails(job.id)}
+                  onClick={() => toggleDetails(job._id)}
                   className="mt-4 inline-block text-blue-600 hover:text-blue-800 transition-all"
                 >
-                  {expandedJobId === job.id ? 'Hide Details' : 'Show Details'}
+                  {expandedJobId === job._id ? 'Hide Details' : 'Show Details'}
                 </button>
 
-                {expandedJobId === job.id && (
+                {expandedJobId === job._id && (
                   <div className="mt-4 p-4 bg-gray-100 rounded-lg shadow-md">
                     <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                      Job Description
+                      Full Job Details
                     </h3>
-                    <p className="text-sm text-gray-600">
-                      {job.jobDescription}
-                    </p>
+                    <ul className="text-sm text-gray-700 space-y-1">
+                      <li><strong>Description:</strong> {job.jobDescription}</li>
+                      <li><strong>Company Description:</strong> {job.companyDescription}</li>
+                      <li><strong>Type:</strong> {job.jobType}</li>
+                      <li><strong>Location Type:</strong> {job.locationType}</li>
+                      <li><strong>Area:</strong> {job.area}</li>
+                      <li><strong>Street Address:</strong> {job.streetAddress}</li>
+                      <li><strong>Salary:</strong> ₹{job.salary}</li>
+                    </ul>
                     <button
                       onClick={() => handleEdit(job)}
                       className="mt-4 text-blue-600 hover:text-blue-800 transition-all"

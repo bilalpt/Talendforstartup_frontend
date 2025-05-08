@@ -40,7 +40,7 @@ export default function Dashboard() {
   }
 
   const navItems = [
-    { icon: <Briefcase />, label: 'Jobs', path: '/hruserside/jobformdetails' },
+    { icon: <Briefcase />, label: 'Posted Jobs', path: '/hruserside/jobformdetails' },
     { icon: <Phone />, label: 'Phone Calls' },
     { icon: <Search />, label: 'Smart Sourcing' },
     { icon: <Users />, label: 'Candidates' },
@@ -135,7 +135,7 @@ export default function Dashboard() {
             />
           </div>
           <p className="text-lg font-semibold">
-            Get up to 4x more applications. Post your first job directly on Indeed.
+            Get up to 4x more applications. Post your first job directly on talent4startup.
           </p>
           <p className="text-sm text-gray-600 mt-2 max-w-xl mx-auto">
             Indeed Apply brings you up to four times more applications than redirecting applications
