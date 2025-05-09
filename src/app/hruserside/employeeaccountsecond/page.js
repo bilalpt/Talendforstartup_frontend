@@ -253,7 +253,7 @@ export default function JobBasicsForm() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full py-3 bg-[#CD0A1A] text-white font-bold rounded-md shadow-lg focus:outline-none focus:ring-2 focus:ring-[#CD0A1A] disabled:bg-gray-400"
+              className="w-full py-3 bg-[#CD0A1A] text-white font-bold rounded-md shadow-lg focus:outline-none focus:ring-2 focus:ring-[#CD0A1A] disabled:bg-gray-400 cursor-pointer"
             >
               {isSubmitting ? 'Submitting...' : 'Submit Job'}
             </button>
