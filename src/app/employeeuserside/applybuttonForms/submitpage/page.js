@@ -2,6 +2,8 @@
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { useRouter , useSearchParams } from 'next/navigation';
+import Image from 'next/image';
+
 
 export default function SubmitPage() {
   const [userData, setUserData] = useState(null);
@@ -135,7 +137,7 @@ export default function SubmitPage() {
               </div>
               <div className="mt-2 bg-gray-100 p-3 rounded-md flex items-center gap-3">
                 <div className="bg-white p-2 rounded shadow">
-                  <img
+                  <Image
                     src="https://img.icons8.com/ios-filled/50/pdf.png"
                     alt="PDF Icon"
                     className="w-6 h-6"

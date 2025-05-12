@@ -64,7 +64,7 @@ export default function ProfilePage() {
         }
       })
       .catch((err) => console.error('Error fetching resume:', err));
-  }, []);
+  }, [router]); // ✅ Fixed dependency warning
 
   if (!user) {
     return (
@@ -140,24 +140,31 @@ export default function ProfilePage() {
 
           {/* Job Preferences */}
           <div className="bg-white rounded-lg p-6 shadow-2xl">
-            <h3 className="text-lg font-semibold text-[#555454] mb-4">Improve Your Job Matches</h3>
+            <h3 className="text-lg font-semibold text-[#555454] mb-4">
+              Improve Your Job Matches
+            </h3>
             <div className="space-y-6">
-              {[{
-                title: 'Qualifications',
-                description: 'Highlight your skills and experience.',
-                path: '/employeeuserside/qualificationform',
-              }, {
-                title: 'Job Preferences',
-                description: 'Include pay expectations and work type preferences.',
-                path: '/employeeuserside/jobpreferences',
-              }].map((item, index) => (
+              {[
+                {
+                  title: 'Qualifications',
+                  description: 'Highlight your skills and experience.',
+                  path: '/employeeuserside/qualificationform',
+                },
+                {
+                  title: 'Job Preferences',
+                  description: 'Include pay expectations and work type preferences.',
+                  path: '/employeeuserside/jobpreferences',
+                },
+              ].map((item, index) => (
                 <div
                   key={index}
                   onClick={() => router.push(item.path)}
                   className="cursor-pointer group"
                 >
                   <div className="pb-4 mb-4 border-b border-[#DDD] transition-colors group-hover:text-[#CD0A1A]">
-                    <h4 className="font-medium text-[#555454] group-hover:text-[#CD0A1A]">{item.title}</h4>
+                    <h4 className="font-medium text-[#555454] group-hover:text-[#CD0A1A]">
+                      {item.title}
+                    </h4>
                     <p className="text-sm text-[#777]">{item.description}</p>
                   </div>
                 </div>

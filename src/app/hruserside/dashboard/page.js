@@ -25,11 +25,11 @@ export default function Dashboard() {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
-      router.push('/homepagesignup'); // redirect if token is missing
+      router.push('/homepagesignup');
     } else {
       setTokenChecked(true);
     }
-  }, []);
+  }, [router]); // ✅ Dependency included
 
   if (!tokenChecked) {
     return (
@@ -63,7 +63,7 @@ export default function Dashboard() {
 
         {/* Create New Button */}
         <div className="w-full mb-6">
-          <li
+          <div
             onClick={() => router.push('/hruserside/employeeaccountsecond')}
             className="flex items-center gap-3 px-3 py-2 rounded 
               bg-white text-black font-bold cursor-pointer hover:bg-gray-200 transition-all
@@ -71,14 +71,14 @@ export default function Dashboard() {
           >
             <Plus className="text-black" />
             {isOpen && <span>Create New</span>}
-          </li>
+          </div>
         </div>
 
         {/* Navigation Items */}
         <ul className="space-y-4 w-full">
           {navItems.map((item, i) => (
             <li
-              key={i}
+              key={i} // ✅ Key added
               onClick={() => {
                 if (item.path) {
                   router.push(item.path);

@@ -1,6 +1,8 @@
 'use client';
 // pages/confirmation.tsx
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+
 
 
 export default function ConfirmationPage() {
@@ -12,7 +14,7 @@ export default function ConfirmationPage() {
         <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
             <div className="max-w-md w-full bg-white shadow-md rounded-xl p-8 text-center">
                 <div className="flex justify-center mb-4">
-                    <img
+                    <Image
                         src="/confirmation-illustration.png"
                         alt="Submitted"
                         className="h-28"

@@ -9,7 +9,7 @@ export default function JobFormDetails() {
 
   const [expandedJobId, setExpandedJobId] = useState(null);
   const [appliedJobs, setAppliedJobs] = useState([]);
-  
+
   const itemsPerPage = 3;
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = Math.ceil(appliedJobs.length / itemsPerPage);
@@ -51,7 +51,7 @@ export default function JobFormDetails() {
           console.error('Error fetching jobs:', err);
         });
     }
-  }, []);
+  }, [router]); // ✅ added router to dependencies
 
   const getStatusColor = (status) => {
     switch (status) {

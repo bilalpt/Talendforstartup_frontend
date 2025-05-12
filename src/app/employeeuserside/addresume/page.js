@@ -1,4 +1,6 @@
 'use clint'
+import Image from 'next/image';
+
 
 export default function Addresume() {
     return (
@@ -6,7 +8,7 @@ export default function Addresume() {
         <div className="bg-white rounded-lg shadow-md p-8 max-w-lg w-full text-center">
           {/* Illustration */}
           <div className="mb-6">
-            <img
+            <Image
               src="/usersideimages/resumewithboy.svg"
               alt="Resume Illustration"
               className="mx-auto w-96 h-52"
