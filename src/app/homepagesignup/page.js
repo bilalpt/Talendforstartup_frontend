@@ -1,201 +1,201 @@
-// 'use client';
+'use client';
 
-// import React, { useState } from 'react';
-// import { SiGoogle } from 'react-icons/si';
-// import { FaComments, FaClipboardList, FaBuilding, FaMoneyBillWave } from 'react-icons/fa';
-// import Image from 'next/image';
-// import Navbar from '../(navbar)/navbar/page';
+import React, { useState } from 'react';
+import { SiGoogle } from 'react-icons/si';
+import { FaComments, FaClipboardList, FaBuilding, FaMoneyBillWave } from 'react-icons/fa';
+import Image from 'next/image';
+import Navbar from '../(navbar)/navbar/page';
 
-// export default function SignupPage() {
-//   const [email, setEmail] = useState('');
-//   const [status, setStatus] = useState('idle');
-//   const [message, setMessage] = useState('');
-//   const [otp, setOtp] = useState('');
-//   const [isOtpSent, setIsOtpSent] = useState(false);
+export default function SignupPage() {
+  const [email, setEmail] = useState('');
+  const [status, setStatus] = useState('idle');
+  const [message, setMessage] = useState('');
+  const [otp, setOtp] = useState('');
+  const [isOtpSent, setIsOtpSent] = useState(false);
 
-//   const handleEmailSubmit = async () => {
-//     if (!email) {
-//       setMessage('Please enter your email.');
-//       setStatus('error');
-//       return;
-//     }
+  const handleEmailSubmit = async () => {
+    if (!email) {
+      setMessage('Please enter your email.');
+      setStatus('error');
+      return;
+    }
 
-//     try {
-//       setStatus('loading');
-//       const response = await fetch('https://talent4startup.onrender.com/auth/register', {
-//         method: 'POST',
-//         headers: {
-//           'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify({ email, purpose: 'register' }),
-//       });
+    try {
+      setStatus('loading');
+      const response = await fetch('https://talent4startup.onrender.com/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, purpose: 'register' }),
+      });
 
-//       const data = await response.json();
-//       console.log(data, 'this is email');
+      const data = await response.json();
+      console.log(data, 'this is email');
 
-//       if (response.ok) {
-//         setStatus('success');
-//         setMessage('OTP has been sent to your email.');
-//         setIsOtpSent(true);
-//       } else {
-//         setStatus('error');
-//         setMessage(data.message || 'Something went wrong.');
-//       }
-//     } catch (err) {
-//       setStatus('error');
-//       setMessage('Server error or network failure.');
-//     }
-//   };
+      if (response.ok) {
+        setStatus('success');
+        setMessage('OTP has been sent to your email.');
+        setIsOtpSent(true);
+      } else {
+        setStatus('error');
+        setMessage(data.message || 'Something went wrong.');
+      }
+    } catch (err) {
+      setStatus('error');
+      setMessage('Server error or network failure.');
+    }
+  };
 
-//   const handleOtpSubmit = async () => {
-//     if (!otp) {
-//       setMessage('Please enter the OTP.');
-//       setStatus('error');
-//       return;
-//     }
+  const handleOtpSubmit = async () => {
+    if (!otp) {
+      setMessage('Please enter the OTP.');
+      setStatus('error');
+      return;
+    }
 
-//     try {
-//       setStatus('loading');
-//       const response = await fetch('https://talent4startup.onrender.com/auth/verify-otp', {
-//         method: 'POST',
-//         headers: {
-//           'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify({ email, otp, purpose: 'register' }),
-//       });
+    try {
+      setStatus('loading');
+      const response = await fetch('https://talent4startup.onrender.com/auth/verify-otp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, otp, purpose: 'register' }),
+      });
 
-//       const data = await response.json();
-//       console.log(data, 'OTP response');
+      const data = await response.json();
+      console.log(data, 'OTP response');
 
-//       if (response.ok) {
-//         localStorage.setItem('token', data.token);
-//         localStorage.setItem('userId', data.user.id);
-//         localStorage.setItem('userEmail', data.user.email);
+      if (response.ok) {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('userId', data.user.id);
+        localStorage.setItem('userEmail', data.user.email);
 
-//         setStatus('success');
-//         setMessage('OTP verified successfully. Redirecting...');
+        setStatus('success');
+        setMessage('OTP verified successfully. Redirecting...');
 
-//         setTimeout(() => {
-//           window.location.href = '/';
-//         }, 1500);
-//       } else {
-//         setStatus('error');
-//         setMessage(data.message || 'Invalid OTP or something went wrong.');
-//       }
-//     } catch (err) {
-//       setStatus('error');
-//       setMessage('Server error or network failure.');
-//     }
-//   };
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 1500);
+      } else {
+        setStatus('error');
+        setMessage(data.message || 'Invalid OTP or something went wrong.');
+      }
+    } catch (err) {
+      setStatus('error');
+      setMessage('Server error or network failure.');
+    }
+  };
 
-//   return (
-//     <>
-//       <Navbar />
+  return (
+    <>
+      <Navbar />
 
-//       <main className="flex flex-col items-center justify-center min-h-screen bg-white">
-//         <div className="max-w-7xl w-full flex flex-col md:flex-row items-center justify-between px-4 py-10">
-//           {/* Left Illustration */}
-//           <div className="hidden md:block w-1/3">
-//             <Image src="/signuppage/searching.svg" alt="Search" width={300} height={300} />
-//           </div>
+      <main className="flex flex-col items-center justify-center min-h-screen bg-white">
+        <div className="max-w-7xl w-full flex flex-col md:flex-row items-center justify-between px-4 py-10">
+          {/* Left Illustration */}
+          <div className="hidden md:block w-1/3">
+            <Image src="/signuppage/searching.svg" alt="Search" width={300} height={300} />
+          </div>
 
-//           {/* Form */}
-//           <div className="w-full md:w-1/3 text-center space-y-6">
-//             <h1 className="text-3xl font-bold text-red-600">Your work people are here</h1>
-//             <p className="text-sm text-gray-600">
-//               By continuing, you agree to our{' '}
-//               <a href="#" className="text-red-600 underline">Terms of Use</a> and{' '}
-//               <a href="#" className="text-red-600 underline">Privacy Policy</a>.
-//             </p>
+          {/* Form */}
+          <div className="w-full md:w-1/3 text-center space-y-6">
+            <h1 className="text-3xl font-bold text-red-600">Your work people are here</h1>
+            <p className="text-sm text-gray-600">
+              By continuing, you agree to our{' '}
+              <a href="#" className="text-red-600 underline">Terms of Use</a> and{' '}
+              <a href="#" className="text-red-600 underline">Privacy Policy</a>.
+            </p>
 
-//             <button className="w-full py-3 px-4 border border-gray-300 rounded-md flex items-center justify-center space-x-2 hover:bg-gray-100">
-//               <SiGoogle className="w-5 h-5 text-red-500" />
-//               <span>Continue with Google</span>
-//             </button>
+            <button className="w-full py-3 px-4 border border-gray-300 rounded-md flex items-center justify-center space-x-2 hover:bg-gray-100">
+              <SiGoogle className="w-5 h-5 text-red-500" />
+              <span>Continue with Google</span>
+            </button>
 
-//             <div className="flex items-center justify-center text-gray-500">
-//               <span className="w-1/4 border-t" />
-//               <span className="mx-2">or</span>
-//               <span className="w-1/4 border-t" />
-//             </div>
+            <div className="flex items-center justify-center text-gray-500">
+              <span className="w-1/4 border-t" />
+              <span className="mx-2">or</span>
+              <span className="w-1/4 border-t" />
+            </div>
 
-//             <input
-//               type="email"
-//               placeholder="Enter email"
-//               value={email}
-//               onChange={(e) => {
-//                 setEmail(e.target.value);
-//                 setStatus('idle');
-//                 setMessage('');
-//               }}
-//               className="w-full px-4 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
-//             />
+            <input
+              type="email"
+              placeholder="Enter email"
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setStatus('idle');
+                setMessage('');
+              }}
+              className="w-full px-4 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+            />
 
-//             <button
-//               onClick={handleEmailSubmit}
-//               disabled={status === 'loading'}
-//               className="w-full py-3 px-4 bg-red-600 text-white rounded-md hover:bg-red-700 disabled:opacity-50"
-//             >
-//               {status === 'loading' ? 'Sending OTP...' : 'Continue with email'}
-//             </button>
+            <button
+              onClick={handleEmailSubmit}
+              disabled={status === 'loading'}
+              className="w-full py-3 px-4 bg-red-600 text-white rounded-md hover:bg-red-700 disabled:opacity-50"
+            >
+              {status === 'loading' ? 'Sending OTP...' : 'Continue with email'}
+            </button>
 
-//             {message && (
-//               <p className={`text-sm ${status === 'success' ? 'text-red-600' : 'text-red-600'}`}>
-//                 {message}
-//               </p>
-//             )}
+            {message && (
+              <p className={`text-sm ${status === 'success' ? 'text-red-600' : 'text-red-600'}`}>
+                {message}
+              </p>
+            )}
 
-//             {isOtpSent && (
-//               <div className="mt-6">
-//                 <input
-//                   type="text"
-//                   placeholder="Enter OTP"
-//                   value={otp}
-//                   onChange={(e) => setOtp(e.target.value)}
-//                   className="w-full px-4 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
-//                 />
-//                 <button
-//                   onClick={handleOtpSubmit}
-//                   disabled={status === 'loading'}
-//                   className="w-full py-3 px-4 bg-red-600 text-white rounded-md hover:bg-red-700 disabled:opacity-50 mt-4"
-//                 >
-//                   {status === 'loading' ? 'Verifying OTP...' : 'Verify OTP'}
-//                 </button>
-//               </div>
-//             )}
-//           </div>
+            {isOtpSent && (
+              <div className="mt-6">
+                <input
+                  type="text"
+                  placeholder="Enter OTP"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value)}
+                  className="w-full px-4 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+                />
+                <button
+                  onClick={handleOtpSubmit}
+                  disabled={status === 'loading'}
+                  className="w-full py-3 px-4 bg-red-600 text-white rounded-md hover:bg-red-700 disabled:opacity-50 mt-4"
+                >
+                  {status === 'loading' ? 'Verifying OTP...' : 'Verify OTP'}
+                </button>
+              </div>
+            )}
+          </div>
 
-//           {/* Right Illustration */}
-//           <div className="hidden md:block w-1/3">
-//             <Image src="/signuppage/handshakingphoto.svg" alt="Handshake" width={300} height={300} />
-//           </div>
-//         </div>
+          {/* Right Illustration */}
+          <div className="hidden md:block w-1/3">
+            <Image src="/signuppage/handshakingphoto.svg" alt="Handshake" width={300} height={300} />
+          </div>
+        </div>
 
-//         {/* Feature Section */}
-//         <section className="py-16 bg-white text-center w-full">
-//           <h2 className="text-2xl font-bold mb-4">Get ahead with Talents 4 Startup</h2>
-//           <p className="text-gray-600 max-w-xl mx-auto mb-10">
-//             We&apos;re serving up trusted insights and anonymous conversation, so you&apos;ll have the goods you need to succeed.
-//           </p>
+        {/* Feature Section */}
+        <section className="py-16 bg-white text-center w-full">
+          <h2 className="text-2xl font-bold mb-4">Get ahead with Talents 4 Startup</h2>
+          <p className="text-gray-600 max-w-xl mx-auto mb-10">
+            We&apos;re serving up trusted insights and anonymous conversation, so you&apos;ll have the goods you need to succeed.
+          </p>
 
-//           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto px-4">
-//             {[
-//               ['Join your work community', <FaComments key="comment" />],
-//               ['Find and apply to jobs', <FaClipboardList key="clipboard" />],
-//               ['Search company reviews', <FaBuilding key="building" />],
-//               ['Compare salaries', <FaMoneyBillWave key="money" />],
-//             ].map(([label, icon], index) => (
-//               <div key={index} className="flex flex-col items-center">
-//                 <div className="border border-black rounded-full p-4 text-red-600">
-//                   {icon}
-//                 </div>
-//                 <p className="mt-4 font-medium">{label}</p>
-//                 {/* hello */}
-//               </div>
-//             ))}
-//           </div>
-//         </section>
-//       </main>
-//     </>
-//   );
-// }
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto px-4">
+            {[
+              ['Join your work community', <FaComments key="comment" />],
+              ['Find and apply to jobs', <FaClipboardList key="clipboard" />],
+              ['Search company reviews', <FaBuilding key="building" />],
+              ['Compare salaries', <FaMoneyBillWave key="money" />],
+            ].map(([label, icon], index) => (
+              <div key={index} className="flex flex-col items-center">
+                <div className="border border-black rounded-full p-4 text-red-600">
+                  {icon}
+                </div>
+                <p className="mt-4 font-medium">{label}</p>
+                {/* hello */}
+              </div>
+            ))}
+          </div>
+        </section>
+      </main>
+    </>
+  );
+}
