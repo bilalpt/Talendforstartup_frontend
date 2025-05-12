@@ -175,17 +175,17 @@ export default function SignupPage() {
         <section className="py-16 bg-white text-center w-full">
           <h2 className="text-2xl font-bold mb-4">Get ahead with Talents 4 Startup</h2>
           <p className="text-gray-600 max-w-xl mx-auto mb-10">
-            We're serving up trusted insights and anonymous conversation, so you'll have the goods you need to succeed.
+            We&apos;re serving up trusted insights and anonymous conversation, so you&apos;ll have the goods you need to succeed.
           </p>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto px-4">
             {[
-              ['Join your work community', <FaComments />],
-              ['Find and apply to jobs', <FaClipboardList />],
-              ['Search company reviews', <FaBuilding />],
-              ['Compare salaries', <FaMoneyBillWave />],
-            ].map(([label, icon], i) => (
-              <div key={i} className="flex flex-col items-center">
+              ['Join your work community', <FaComments key="comment" />],
+              ['Find and apply to jobs', <FaClipboardList key="clipboard" />],
+              ['Search company reviews', <FaBuilding key="building" />],
+              ['Compare salaries', <FaMoneyBillWave key="money" />],
+            ].map(([label, icon], index) => (
+              <div key={index} className="flex flex-col items-center">
                 <div className="border border-black rounded-full p-4 text-red-600">
                   {icon}
                 </div>
