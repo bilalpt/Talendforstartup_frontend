@@ -190,6 +190,7 @@ export default function SignupPage() {
                   {icon}
                 </div>
                 <p className="mt-4 font-medium">{label}</p>
+                {/* hello */}
               </div>
             ))}
           </div>
