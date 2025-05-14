@@ -95,6 +95,7 @@ export default function SignupPage() {
       <main className="flex flex-col items-center justify-center min-h-screen bg-white">
         <div className="max-w-7xl w-full flex flex-col md:flex-row items-center justify-between px-4 py-10">
           {/* Left Illustration */}
+          {/* this is signuppage */}
           <div className="hidden md:block w-1/3">
             <Image src="/signuppage/searching.svg" alt="Search" width={300} height={300} />
           </div>
