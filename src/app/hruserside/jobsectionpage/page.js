@@ -30,7 +30,7 @@ export default function JobSection() {
           onClick={() =>
             router.push('/employeeuserside/emplyeehomepage/employehome')
           }
-          className="mt-4 px-6 py-2 border border-blue-600 text-blue-600 rounded-lg font-medium hover:bg-blue-100"
+          className="mt-4 px-6 py-2 border border-red-600 text-red-600 rounded-lg font-medium hover:bg-blue-100"
         >
           Find jobs
         </button>
@@ -48,7 +48,7 @@ export default function JobSection() {
         <h2 className="text-xl font-semibold mt-4">Hiring an employee?</h2>
         <button
           onClick={() => router.push('/hruserside/dashboard')}
-          className="cursor-pointer mt-4 px-6 py-2 border border-blue-600 text-blue-600 rounded-lg font-medium hover:bg-blue-100"
+          className="cursor-pointer mt-4 px-6 py-2 border border-red-600 text-red-600 rounded-lg font-medium hover:bg-blue-100"
         >
           Post a job
         </button>

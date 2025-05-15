@@ -14,6 +14,8 @@ export default function ExperienceFormClient() {
 
   const searchParams = useSearchParams();
   const jobId = searchParams.get('jobId');
+  console.log(jobId,'this is the jobid hello');
+  
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -70,7 +72,7 @@ export default function ExperienceFormClient() {
     >
       {/* Left form section */}
       <div className="flex-1 max-w-xl w-full">
-        <h1 className="text-2xl font-bold mb-4">
+        <h1 className=" font-bold mb-4">
           Enter a past job that shows relevant experience
         </h1>
         <p className="font-semibold text-gray-700 mb-2">
@@ -126,7 +128,7 @@ export default function ExperienceFormClient() {
 
         <button
           onClick={handleContinue}
-          className="mt-6 w-full bg-red-600 text-white py-2 px-4 rounded font-semibold hover:bg-red-700 transition"
+          className="mt-6 w-full bg-red-600 text-white py-2 px-4 rounded font-semibold hover:bg-red-700 transition cursor-pointer"
         >
           Continue
         </button>
@@ -152,7 +154,7 @@ export default function ExperienceFormClient() {
             Developing back-end website applications using server-side programming languages, including Java, Golang, Node, and Python
           </li>
         </ul>
-        <button className="text-blue-700 font-semibold mt-6 flex items-center gap-1">
+        <button className="text-blue-700 font-semibold mt-6 flex items-center gap-1 cursor-pointer">
           View full job description <span className="text-lg">▾</span>
         </button>
       </motion.div>

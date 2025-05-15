@@ -2,6 +2,8 @@
 // pages/confirmation.tsx
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import searchingimg from '../../../../../public/savedjobs/searchingimg.svg'
+
 
 
 
@@ -15,7 +17,7 @@ export default function ConfirmationPage() {
             <div className="max-w-md w-full bg-white shadow-md rounded-xl p-8 text-center">
                 <div className="flex justify-center mb-4">
                     <Image
-                        src="/confirmation-illustration.png"
+                        src={searchingimg}
                         alt="Submitted"
                         className="h-28"
                     />
@@ -24,7 +26,7 @@ export default function ConfirmationPage() {
                     Your application has been submitted!
                 </h2>
                 <div className="bg-gray-100 border border-gray-300 rounded-lg p-3 mb-6 text-sm text-gray-700 flex items-center justify-center">
-                    <svg
+                    {/* <svg
                         className="h-5 w-5 text-green-500 mr-2"
                         fill="none"
                         stroke="currentColor"
@@ -33,14 +35,13 @@ export default function ConfirmationPage() {
                     >
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
-                    You will get an email confirmation at <strong className="ml-1">bilalpt572@gmail.com</strong>
+                    You will get an email confirmation at <strong className="ml-1">bilalpt572@gmail.com</strong> */}
                 </div>
                 <p className="font-semibold text-gray-700 mb-1">
                     Keep track of your applications
                 </p>
                 <p className="text-sm text-gray-500 mb-6">
-                    To keep track of your applications, go to{' '}
-                    <a href="#" className="text-blue-600 underline">MyJobs</a>.
+                    To keep track of your applications, go to   MyJobs
                 </p>
                 <button
                     onClick={handleClick}

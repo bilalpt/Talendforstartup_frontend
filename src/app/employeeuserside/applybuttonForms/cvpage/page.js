@@ -1,15 +1,16 @@
-// components/CVUploader.js
 'use client';
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { ArrowUpTrayIcon, DocumentArrowUpIcon } from '@heroicons/react/24/solid';
 
-export default function CVUploader({ jobId }) {
+export default function CVUploader() {
   const [cvFile, setCvFile] = useState(null);
   const [existingCv, setExistingCv] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const jobId = searchParams.get('jobId');
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -79,9 +80,7 @@ export default function CVUploader({ jobId }) {
     }
   };
 
-  if (!isAuthenticated) {
-    return null;
-  }
+  if (!isAuthenticated) return null;
 
   return (
     <div className="min-h-screen bg-red-50 py-12 px-4 flex flex-col items-center">

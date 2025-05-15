@@ -2,19 +2,15 @@
 import Head from 'next/head';
 import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import Image from 'next/image';
+
+
 
 export default function SubmitPage() {
   const [userData, setUserData] = useState(null);
   const [error, setError] = useState(null);
   const router = useRouter();
-
-  // This part is moved to be wrapped in Suspense
-  const SearchParamsWithSuspense = () => {
-    const searchParams = useSearchParams();
-    const jobId = searchParams.get("jobId");
-    return jobId;
-  };
+  const searchParams = useSearchParams(); // ✅ Correct usage
+  const jobId = searchParams.get("jobId"); // ✅ Extract jobId here
 
   useEffect(() => {
     const userId = localStorage.getItem('userId');
@@ -37,9 +33,6 @@ export default function SubmitPage() {
   const handleSubmit = async () => {
     const userId = localStorage.getItem("userId");
 
-    // Moved jobId retrieval inside the SearchParamsWithSuspense component
-    const jobId = SearchParamsWithSuspense();
-
     if (!userId || !jobId) {
       alert("User ID or Job ID is missing.");
       return;
@@ -51,14 +44,13 @@ export default function SubmitPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ userId, jobId }),        
+        body: JSON.stringify({ userId, jobId }),
       });
 
       if (!response.ok) {
         throw new Error("Failed to submit application");
       }
 
-      // Navigate to success page
       router.push("/employeeuserside/applybuttonForms/succespage");
     } catch (err) {
       console.error(err);
@@ -81,7 +73,6 @@ export default function SubmitPage() {
         <title>Application Review</title>
       </Head>
 
-      {/* Wrap Suspense around this part */}
       <Suspense fallback={<div>Loading user data...</div>}>
         <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
           <div className="max-w-md w-full bg-white rounded-2xl shadow-lg p-6 border border-gray-200">
@@ -143,14 +134,14 @@ export default function SubmitPage() {
                   <button className="text-red-500 hover:underline text-sm cursor-pointer">Edit</button>
                 </div>
                 <div className="mt-2 bg-gray-100 p-3 rounded-md flex items-center gap-3">
-                  <div className="bg-white p-2 rounded shadow">
-                    <Image
-                      src="https://img.icons8.com/ios-filled/50/pdf.png"
-                      alt="PDF Icon"
-                      className="w-6 h-6"
-                    />
-                  </div>
-                  <button className="text-red-700 font-medium text-sm hover:underline">CV</button>
+                  <a
+                    href={resumeUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-red-700 font-medium text-sm hover:underline"
+                  >
+                    View CV
+                  </a>
                 </div>
               </div>
 
