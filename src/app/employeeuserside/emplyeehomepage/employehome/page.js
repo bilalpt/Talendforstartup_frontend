@@ -14,10 +14,6 @@ const EmployeHome = () => {
   const [userId, setUserId] = useState(null);
   const [userApplications, setUserApplications] = useState([]);
   const [qualification, setQualification] = useState(null);
-  
-  
-  
-
 
   useEffect(() => {
     const storedUserId = localStorage.getItem("userId");
@@ -33,9 +29,11 @@ const EmployeHome = () => {
       try {
         const response = await fetch("https://talent4startup.onrender.com/jobs");
         const data = await response.json();
-        
-        setJobList(data.posts);
-        setSelectedJob(data.posts[0]);
+
+        // Filter out jobs where recruiter === userId
+        const filteredJobs = data.posts.filter((job) => job.recruiter !== userId);
+        setJobList(filteredJobs);
+        setSelectedJob(filteredJobs[0]);
       } catch (error) {
         console.error("Error fetching job data:", error);
       } finally {
@@ -43,20 +41,20 @@ const EmployeHome = () => {
       }
     };
 
-    fetchJobData();
-  }, []);
+    if (userId) {
+      fetchJobData();
+    }
+  }, [userId]);
 
   useEffect(() => {
     const fetchApplicationsAndProfile = async () => {
       if (!userId) return;
 
       try {
-        // Fetch applications
         const appsRes = await fetch(`https://talent4startup.onrender.com/jobs/application/${userId}`);
-        const appsData = await appsRes.json();        
+        const appsData = await appsRes.json();
         setUserApplications(Array.isArray(appsData.applications) ? appsData.applications : []);
 
-        // Fetch profile (qualification)
         const profileRes = await fetch(`https://talent4startup.onrender.com/users/user-qualification/${userId}`);
         const profileData = await profileRes.json();
         if (profileData?.data?._id) {
@@ -84,7 +82,8 @@ const EmployeHome = () => {
 
     try {
       const res = await fetch(`https://talent4startup.onrender.com/users/${userId}`);
-      const userData = await res.json();      
+      const userData = await res.json();
+
       if (userData?.user?.phone) {
         router.push(`/employeeuserside/applybuttonForms/cvpage?jobId=${selectedJob._id}`);
       } else {
@@ -126,8 +125,7 @@ const EmployeHome = () => {
                   setSelectedJob(job);
                   setMobileDetailOpen(true);
                 }}
-                className={`border rounded-lg p-4 cursor-pointer relative flex gap-3 transition h-auto mb-4 ${selectedJob?._id === job._id ? "border-[#CD0A1A] bg-white shadow" : "bg-white"
-                  } ${applied ? "border-green-500" : ""}`}
+                className={`border rounded-lg p-4 cursor-pointer relative flex gap-3 transition h-auto mb-4 ${selectedJob?._id === job._id ? "border-[#CD0A1A] bg-white shadow" : "bg-white"} ${applied ? "border-green-500" : ""}`}
               >
                 <div className="flex flex-col justify-between flex-grow overflow-hidden">
                   <div>
@@ -176,12 +174,13 @@ const EmployeHome = () => {
                     </button>
                   ) : qualification !== null ? (
                     <button onClick={handleApply} className="px-4 py-2 rounded-md bg-[#CD0A1A] text-white cursor-pointer">
-                      Apply on employer site 
+                      Apply on employer site
                     </button>
-                    
-                  ):<button onClick={() => router.push('/employeeuserside/qualificationform')} className="px-4 py-2 rounded-md bg-[#CD0A1A] text-white cursor-pointer">
-                    Apply on employer site 
-                  </button> }
+                  ) : (
+                    <button onClick={() => router.push('/employeeuserside/qualificationform')} className="px-4 py-2 rounded-md bg-[#CD0A1A] text-white cursor-pointer">
+                      Apply on employer site
+                    </button>
+                  )}
                 </div>
               </div>
 
@@ -220,7 +219,6 @@ const EmployeHome = () => {
               <p><strong>Area:</strong> {selectedJob.area}</p>
               <p><strong>Pincode:</strong> {selectedJob.pincode}</p>
               <p><strong>Salary:</strong> ₹{selectedJob.salary}</p>
-              {/* {qualification && <p><strong>Your Qualification:</strong> {qualification}</p>} */}
             </div>
 
             <div className="mt-6">
@@ -230,25 +228,18 @@ const EmployeHome = () => {
               </p>
 
               {isJobApplied(selectedJob._id) ? (
-                <button className="px-4 py-2 rounded-md bg-gray-300 text-gray-500 cursor-not-allowed">
+                <button className="px-4 py-2 rounded-md bg-gray-300 text-gray-500 cursor-not-allowed w-full mt-4">
                   Already Applied
                 </button>
               ) : qualification !== null ? (
-                <button
-                  onClick={handleApply}
-                  className="px-4 py-2 rounded-md bg-[#CD0A1A] text-white cursor-pointer"
-                >
-                  Apply on employer site 
+                <button onClick={handleApply} className="px-4 py-2 rounded-md bg-[#CD0A1A] text-white w-full mt-4">
+                  Apply on employer site
                 </button>
               ) : (
-                <button
-                  onClick={() => router.push('/employeeuserside/qualificationform')}
-                  className="px-4 py-2 rounded-md bg-[#CD0A1A] text-white cursor-pointer"
-                >
-                  Apply on employer site 
+                <button onClick={() => router.push('/employeeuserside/qualificationform')} className="px-4 py-2 rounded-md bg-[#CD0A1A] text-white w-full mt-4">
+                  Apply on employer site
                 </button>
               )}
-
             </div>
           </div>
         )}
