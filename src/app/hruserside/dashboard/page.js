@@ -29,7 +29,7 @@ export default function Dashboard() {
     } else {
       setTokenChecked(true);
     }
-  }, [router]); // ✅ Dependency included
+  }, [router]);
 
   if (!tokenChecked) {
     return (
@@ -39,14 +39,15 @@ export default function Dashboard() {
     );
   }
 
+  // ✅ Updated nav items with redirect paths
   const navItems = [
     { icon: <Briefcase />, label: 'Posted Jobs', path: '/hruserside/jobformdetails' },
-    { icon: <Phone />, label: 'Phone Calls' },
-    { icon: <Search />, label: 'Smart Sourcing' },
-    { icon: <Users />, label: 'Candidates' },
-    { icon: <Calendar />, label: 'Interviews' },
-    { icon: <BarChart2 />, label: 'Analytics' },
-    { icon: <FolderPlus />, label: 'Tools' },
+    { icon: <Users />, label: 'Candidates', path: '/hruserside/candidates' },
+    { icon: <Phone />, label: 'Phone Calls', path: '/hruserside/phonecalls' },
+    { icon: <Search />, label: 'Smart Sourcing', path: '/hruserside/smartsourcing' },
+    { icon: <Calendar />, label: 'Interviews', path: '/hruserside/interviews' },
+    { icon: <BarChart2 />, label: 'Analytics', path: '/hruserside/analytics' },
+    { icon: <FolderPlus />, label: 'Tools', path: '/hruserside/tools' },
   ];
 
   return (
@@ -78,7 +79,7 @@ export default function Dashboard() {
         <ul className="space-y-4 w-full">
           {navItems.map((item, i) => (
             <li
-              key={i} // ✅ Key added
+              key={i}
               onClick={() => {
                 if (item.path) {
                   router.push(item.path);
@@ -138,7 +139,7 @@ export default function Dashboard() {
             Get up to 4x more applications. Post your first job directly on talent4startup.
           </p>
           <p className="text-sm text-gray-600 mt-2 max-w-xl mx-auto">
-            Indeed Apply brings you up to four times more applications than redirecting applications
+            talent4startup Apply brings you up to four times more applications than redirecting applications
             to your career website. Make it simpler. Hire faster.
           </p>
           <button

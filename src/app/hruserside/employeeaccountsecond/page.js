@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import Sidebar from '../sidebar/page';
 
 export default function JobBasicsForm() {
   const router = useRouter();
@@ -55,9 +56,9 @@ export default function JobBasicsForm() {
     if (!formData.jobTitle) newErrors.jobTitle = 'Job title is required.';
     if (!formData.jobDescription) newErrors.jobDescription = 'Job description is required.';
     if (!formData.salary) newErrors.salary = 'Salary is required.';
+    if (formData.salary && isNaN(Number(formData.salary))) newErrors.salary = 'Salary must be a valid number.';
     if (!formData.jobType) newErrors.jobType = 'Job type is required.';
     if (!formData.city) newErrors.city = 'City is required.';
-    if (formData.salary && isNaN(Number(formData.salary))) newErrors.salary = 'Salary must be a valid number.';
     if (formData.pincode && !/^\d{6}$/.test(formData.pincode)) newErrors.pincode = 'Pincode must be 6 digits.';
     if (!formData.userId) newErrors.userId = 'User ID is missing.';
     return newErrors;
@@ -67,16 +68,15 @@ export default function JobBasicsForm() {
     e.preventDefault();
     const formErrors = validateForm();
 
-    // Check if errors exist before updating state and logging
     if (Object.keys(formErrors).length > 0) {
       setErrors(formErrors);
-      console.log('Form validation failed. Errors:', formErrors); // Log detailed errors
+      console.log('Form validation failed. Errors:', formErrors);
       return;
     }
 
     try {
       setIsSubmitting(true);
-      
+
       const response = await fetch('https://talent4startup.onrender.com/jobs/create', {
         method: 'POST',
         headers: {
@@ -87,7 +87,6 @@ export default function JobBasicsForm() {
       });
 
       const result = await response.json();
-      
 
       if (!response.ok) {
         setErrorMessage(`❌ Error: ${result.message || 'Something went wrong'}`);
@@ -121,9 +120,14 @@ export default function JobBasicsForm() {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row items-center justify-center min-h-screen p-4 bg-gray-50">
-      {/* Left Side - Image */}
-      <div className="hidden lg:flex w-1/2 justify-center">
+    <div className="flex flex-col lg:flex-row min-h-screen  bg-gray-50">
+      {/* Sidebar */}
+      <div className="w-full md:w-1/4 lg:w-1/5 px-0 py-0 bg-white border-r border-gray-200 p-4 sticky top-0 h-screen hidden md:block">
+        <Sidebar />
+      </div>
+
+      {/* Image Section */}
+      <div className="hidden lg:flex w-1/2 justify-center items-center">
         <div className="relative w-96 h-96">
           <Image 
             src="/hrsideimages/girlwithcv.svg" 
@@ -135,8 +139,8 @@ export default function JobBasicsForm() {
         </div>
       </div>
 
-      {/* Right Side - Form */}
-      <div className="w-full max-w-2xl bg-white p-8 shadow-2xl rounded-xl border border-gray-200">
+      {/* Form Section */}
+      <div className="w-full max-w-2xl bg-white p-8 shadow-2xl rounded-xl border border-gray-200 mx-auto">
         <h1 className="text-3xl font-bold text-[#CD0A1A] mb-6">Job Basics</h1>
 
         {successMessage && <div className="text-green-600 font-medium mb-4">{successMessage}</div>}
@@ -145,8 +149,8 @@ export default function JobBasicsForm() {
         <form onSubmit={handleSubmit} className="space-y-5">
           <input type="hidden" name="userId" value={formData.userId} />
 
-          {/* Main Fields */}
-          {[ 
+          {/* Main Input Fields */}
+          {[
             { id: 'companyName', label: 'Company Name', required: true, type: 'text', placeholder: 'Eg: Rainbow Graphix Pvt Ltd' },
             { id: 'companyDescription', label: 'Company Description', type: 'textarea', placeholder: 'Describe your company...' },
             { id: 'jobTitle', label: 'Job Title', required: true, type: 'text' },
@@ -222,9 +226,9 @@ export default function JobBasicsForm() {
             </select>
           </div>
 
-          {/* Address Fields */}
+          {/* Address Inputs */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {[ 
+            {[
               { id: 'city', label: 'City', required: true },
               { id: 'area', label: 'Area' },
               { id: 'pincode', label: 'Pincode' },
