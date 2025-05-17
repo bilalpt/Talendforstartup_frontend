@@ -24,7 +24,7 @@ export default function Sidebar() {
     // ✅ Updated nav items with redirect paths
     const navItems = [
         { icon: <Briefcase />, label: 'Posted Jobs', path: '/hruserside/jobformdetails' },
-        { icon: <Users />, label: 'Candidates', path: '/hruserside/candidates' },
+        { icon: <Users />, label: 'Candidates', path: '/hruserside/appliedcandidates' },
         { icon: <Phone />, label: 'Phone Calls', path: '/hruserside/phonecalls' },
         { icon: <Search />, label: 'Smart Sourcing', path: '/hruserside/smartsourcing' },
         { icon: <Calendar />, label: 'Interviews', path: '/hruserside/interviews' },
