@@ -34,7 +34,7 @@ export default function Addresume() {
             </li>
           </ul>
   
-          {/* Agreement Text */}
+          {/* Agreement Textt */}
           <p className="text-sm text-gray-500 mb-6">
             By continuing, you agree to receive job opportunities from Indeed.
           </p>
