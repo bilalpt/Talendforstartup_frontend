@@ -13,6 +13,11 @@ const MyJobs = () => {
   const [userId, setUserId] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  console.log(jobList,'jobListjobListjobListjobList jobList');
+  console.log(userApplications,'userApplicationsuserApplicationsuserApplications userApplications ');
+  
+  
+
   useEffect(() => {
     const storedUserId = localStorage.getItem("userId");
     if (storedUserId) {
@@ -42,7 +47,7 @@ const MyJobs = () => {
 
       try {
         const appsRes = await fetch(`https://talent4startup.onrender.com/jobs/application/${userId}`);
-        const appsData = await appsRes.json();
+        const appsData = await appsRes.json();        
         setUserApplications(Array.isArray(appsData.applications) ? appsData.applications : []);
       } catch (error) {
         console.error("Error fetching applications:", error);
