@@ -12,8 +12,7 @@ const Appliedcandidates = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [expandedCards, setExpandedCards] = useState({});
   const [loadingStatusUpdate, setLoadingStatusUpdate] = useState({});
-
-  console.log(jobs,'jobsjobs  jobsjobs  jobsjobs  jobsjobs');
+  console.log(loadingStatusUpdate,'loadingStatusUpdateloadingStatusUpdateloadingStatusUpdateloadingStatusUpdateloadingStatusUpdate loadingStatusUpdate');
   
 
   const cardsPerPage = 4;
@@ -93,6 +92,7 @@ const Appliedcandidates = () => {
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({ status: newStatus }),
+          
         }
       );
 
@@ -139,219 +139,214 @@ const Appliedcandidates = () => {
               No applications found.
             </p>
           ) : (
-            <>
-              <div className="space-y-8">
-                {selectedJobs.map((application) => {
-                  const job = application.job || {};
-                  const user = application.user || {};
-                  const status = application.status || "Unknown";
-                  const isExpanded = expandedCards[application._id];
+            <div className="space-y-8">
+              {selectedJobs.map((application) => {
+                const job = application.job || {};
+                const user = application.user || {};
+                const status = application.status || "Unknown";
+                const isExpanded = expandedCards[application._id];
 
-                  return (
-                    <div
-                      key={application._id}
-                      className="bg-white max-w-3xl mx-auto rounded-xl border border-gray-200 shadow-md hover:shadow-lg transition duration-300 p-6"
-                    >
-                      <div className="flex flex-col md:flex-row justify-between gap-6">
-                        {/* Left Side */}
-                        <div>
-                          <h2 className="text-2xl font-semibold text-gray-800">
-                            {job.jobTitle || "Job Title"}
-                          </h2>
-
-                          <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3 text-gray-600 text-sm">
-                            <p>
-                              <strong>Candidate:</strong> {user.firstName}{" "}
-                              {user.lastName}
-                            </p>
-                            <p>
-                              <strong>Email:</strong> {user.email}
-                            </p>
-                            <p>
-                              <strong>Phone:</strong> {user.phone}
-                            </p>
-                            <p>
-                              <strong>Address:</strong> {user.address}
-                            </p>
-                            <p className="sm:col-span-2">
-                              <strong>Applied At:</strong>{" "}
-                              {new Date(application.appliedAt).toLocaleString()}
-                            </p>
-                          </div>
-                        </div>
-
-                        {/* Right Side */}
-                        <div className="flex flex-col gap-4 items-start md:items-end">
-                          <div>
-                            <label className="text-sm font-semibold text-gray-700">
-                              Status:
-                            </label>
-                            <select
-                              className={`mt-1 px-2 py-1 rounded-md text-sm font-medium ${
-                                validStatuses[status] || "bg-gray-100 text-gray-700"
-                              }`}
-                              value={status}
-                              onChange={(e) =>
-                                handleStatusChange(application._id, e.target.value)
-                              }
-                              disabled={loadingStatusUpdate[application._id]}
-                            >
-                              {Object.keys(validStatuses).map((s) => (
-                                <option key={s} value={s}>
-                                  {s}
-                                </option>
-                              ))}
-                            </select>
-                          </div>
-
-                          <button
-                            className="text-red-600 hover:text-red-800 text-sm flex items-center gap-1"
-                            onClick={() =>
-                              alert("Delete functionality not implemented.")
-                            }
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="w-4 h-4"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M6 18L18 6M6 6l12 12"
-                              />
-                            </svg>
-                            Delete
-                          </button>
-
-                          <button
-                            onClick={() => toggleShowMore(application._id)}
-                            className="text-blue-600 hover:text-blue-800 text-sm"
-                          >
-                            {isExpanded ? "Show Less" : "Show More"}
-                          </button>
+                return (
+                  <div
+                    key={application._id}
+                    className="bg-white max-w-3xl mx-auto rounded-xl border border-gray-200 shadow-md hover:shadow-lg transition duration-300 p-6"
+                  >
+                    <div className="flex flex-col md:flex-row justify-between gap-6">
+                      <div>
+                        <h2 className="text-2xl font-semibold text-gray-800">
+                          {job.jobTitle || "Job Title"}
+                        </h2>
+                        <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3 text-gray-600 text-sm">
+                          <p>
+                            <strong>Candidate:</strong> {user.firstName} {user.lastName}
+                          </p>
+                          <p>
+                            <strong>Email:</strong> {user.email}
+                          </p>
+                          <p>
+                            <strong>Phone:</strong> {user.phone}
+                          </p>
+                          <p>
+                            <strong>Address:</strong> {user.address}
+                          </p>
+                          <p className="sm:col-span-2">
+                            <strong>Applied At:</strong>{" "}
+                            {new Date(application.appliedAt).toLocaleString()}
+                          </p>
                         </div>
                       </div>
 
-                      {/* Extra Details */}
-                      {isExpanded && (
-                        <div className="mt-6 text-gray-700 text-sm border-t pt-4 space-y-4">
-                          <p>
-                            <strong>Candidate Resume:</strong>{" "}
-                            {user._id ? (
-                              <a
-                                href={`https://talent4startup.onrender.com/users/resume/${user._id}`}
-                                className="text-blue-600 underline"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                View Resume
-                              </a>
-                            ) : (
-                              "Not uploaded"
-                            )}
-                          </p>
-
-                          {/* Experience */}
-                          <div>
-                            <strong>Candidate Experience:</strong>
-                            {user.experience && typeof user.experience === "object" ? (
-                              <div className="mt-1 ml-4">
-                                {user.experience.title && (
-                                  <p>
-                                    <strong>Title:</strong> {user.experience.title}
-                                  </p>
-                                )}
-                                {user.experience.company && (
-                                  <p>
-                                    <strong>Company:</strong> {user.experience.company}
-                                  </p>
-                                )}
-                                {user.experience.years !== undefined && (
-                                  <p>
-                                    <strong>Years:</strong> {user.experience.years}
-                                  </p>
-                                )}
-                              </div>
-                            ) : (
-                              <p className="ml-4">{user.experience || "Not provided"}</p>
-                            )}
-                          </div>
-
-                          {/* Qualification */}
-                          <div>
-                            <strong>Candidate Qualification:</strong>
-                            {user.qualification && typeof user.qualification === "object" ? (
-                              <div className="mt-1 ml-4 space-y-2">
-                                {user.qualification.cert && (
-                                  <div>
-                                    <p>
-                                      <strong>Certificate Name:</strong>{" "}
-                                      {user.qualification.cert.name}
-                                    </p>
-                                    <p>
-                                      <strong>Issued By:</strong>{" "}
-                                      {user.qualification.cert.org}
-                                    </p>
-                                  </div>
-                                )}
-
-                                {user.qualification.education && (
-                                  <div>
-                                    <p>
-                                      <strong>Degree:</strong>{" "}
-                                      {user.qualification.education.degree}
-                                    </p>
-                                    <p>
-                                      <strong>Institute:</strong>{" "}
-                                      {user.qualification.education.institute}
-                                    </p>
-                                  </div>
-                                )}
-
-                                <div>
-                                  <strong>Languages:</strong>{" "}
-                                  {(user.qualification.lang || []).join(", ")}
-                                </div>
-
-                                <div>
-                                  <strong>Skills:</strong>{" "}
-                                  {(user.qualification.skill || []).join(", ")}
-                                </div>
-                              </div>
-                            ) : (
-                              <p className="ml-4">
-                                {user.qualification || "Not provided"}
-                              </p>
-                            )}
-                          </div>
+                      <div className="flex flex-col gap-4 items-start md:items-end">
+                        <div>
+                          <label className="text-sm font-semibold text-gray-700">
+                            Status:
+                          </label>
+                          <select
+                            className={`mt-1 px-2 py-1 rounded-md text-sm font-medium ${
+                              validStatuses[status] || "bg-gray-100 text-gray-700"
+                            }`}
+                            value={status}
+                            onChange={(e) =>
+                              handleStatusChange(application._id, e.target.value)
+                            }
+                            disabled={loadingStatusUpdate[application._id]}
+                          >
+                            {Object.keys(validStatuses).map((s) => (
+                              <option key={s} value={s}>
+                                {s}
+                              </option>
+                            ))}
+                          </select>
                         </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
 
-              {/* Pagination */}
+                        <button
+                          className="text-red-600 hover:text-red-800 text-sm flex items-center gap-1"
+                          onClick={() => alert("Delete functionality not implemented.")}
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="w-4 h-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M6 18L18 6M6 6l12 12"
+                            />
+                          </svg>
+                          Delete
+                        </button>
+
+                        <button
+                          onClick={() => toggleShowMore(application._id)}
+                          className="text-blue-600 hover:text-blue-800 text-sm"
+                        >
+                          {isExpanded ? "Show Less" : "Show More"}
+                        </button>
+                      </div>
+                    </div>
+
+                    {isExpanded && (
+                      <div className="mt-6 text-gray-700 text-sm border-t pt-4 space-y-4">
+                        <p>
+                          <strong>Candidate Resume:</strong>{" "}
+                          {user._id ? (
+                            <a
+                              href={`https://talent4startup.onrender.com/users/resume/${user._id}`}
+                              className="text-blue-600 underline"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              View Resume
+                            </a>
+                          ) : (
+                            "Not uploaded"
+                          )}
+                        </p>
+
+                        <div>
+                          <strong>Candidate Experience:</strong>
+                          {user.experience && typeof user.experience === "object" ? (
+                            <div className="mt-1 ml-4">
+                              {user.experience.title && (
+                                <p>
+                                  <strong>Title:</strong> {user.experience.title}
+                                </p>
+                              )}
+                              {user.experience.company && (
+                                <p>
+                                  <strong>Company:</strong> {user.experience.company}
+                                </p>
+                              )}
+                              {user.experience.years !== undefined && (
+                                <p>
+                                  <strong>Years:</strong> {user.experience.years}
+                                </p>
+                              )}
+                            </div>
+                          ) : (
+                            <p className="ml-4">
+                              {user.experience || "Not provided"}
+                            </p>
+                          )}
+                        </div>
+
+                        <div>
+                          <strong>Candidate Qualification:</strong>
+                          {user.qualification && typeof user.qualification === "object" ? (
+                            <div className="mt-1 ml-4 space-y-2">
+                              {user.qualification.cert && (
+                                <div>
+                                  <p>
+                                    <strong>Certificate Name:</strong>{" "}
+                                    {user.qualification.cert.name}
+                                  </p>
+                                  <p>
+                                    <strong>Issued By:</strong>{" "}
+                                    {user.qualification.cert.org}
+                                  </p>
+                                </div>
+                              )}
+
+                              {user.qualification.education && (
+                                <div>
+                                  <p>
+                                    <strong>Degree:</strong>{" "}
+                                    {user.qualification.education.degree}
+                                  </p>
+                                  <p>
+                                    <strong>Institute:</strong>{" "}
+                                    {user.qualification.education.institute}
+                                  </p>
+                                </div>
+                              )}
+
+                              <div>
+                                <strong>Languages:</strong>{" "}
+                                {(user.qualification.lang || []).join(", ")}
+                              </div>
+
+                              <div>
+                                <strong>Skills:</strong>{" "}
+                                {(user.qualification.skill || []).join(", ")}
+                              </div>
+                            </div>
+                          ) : (
+                            <p className="ml-4">
+                              {user.qualification || "Not provided"}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+
+              {/* Pagination controls */}
               <div className="mt-10 flex justify-center gap-4">
-                {Array.from({ length: totalPages }, (_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentPage(index + 1)}
-                    className={`px-4 py-2 rounded-lg ${
-                      currentPage === index + 1
-                        ? "bg-[#CD0A4A] text-white"
-                        : "bg-gray-200 text-gray-700"
-                    }`}
-                  >
-                    {index + 1}
-                  </button>
-                ))}
+                <button
+                  className="px-4 py-2 rounded-md bg-gray-200 text-sm"
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                >
+                  Previous
+                </button>
+                <span className="px-4 py-2 text-sm text-gray-700">
+                  Page {currentPage} of {totalPages}
+                </span>
+                <button
+                  className="px-4 py-2 rounded-md bg-gray-200 text-sm"
+                  disabled={currentPage === totalPages}
+                  onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                >
+                  Next
+                </button>
               </div>
-            </>
+            </div>
           )}
         </div>
       </div>
