@@ -12,7 +12,6 @@ const Appliedcandidates = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [expandedCards, setExpandedCards] = useState({});
   const [loadingStatusUpdate, setLoadingStatusUpdate] = useState({});
-  console.log(loadingStatusUpdate,'loadingStatusUpdateloadingStatusUpdateloadingStatusUpdateloadingStatusUpdateloadingStatusUpdate loadingStatusUpdate');
   
 
   const cardsPerPage = 4;
