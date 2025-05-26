@@ -19,17 +19,26 @@ import Image from 'next/image';
 export default function Dashboard() {
   const [isOpen, setIsOpen] = useState(true);
   const [tokenChecked, setTokenChecked] = useState(false);
+  const [userEmail, setUserEmail] = useState('');
+  
+
   const router = useRouter();
 
   // ✅ Token check
   useEffect(() => {
     const token = localStorage.getItem('token');
+    const email = localStorage.getItem('userEmail');
+
+    if (email) {
+      setUserEmail(email);
+    }
     if (!token) {
       router.push('/homepagesignup');
     } else {
       setTokenChecked(true);
     }
   }, [router]);
+
 
   if (!tokenChecked) {
     return (
@@ -54,9 +63,8 @@ export default function Dashboard() {
     <div className="flex min-h-screen">
       {/* Sidebar */}
       <aside
-        className={`bg-gray-900 text-white transition-all duration-300 ${
-          isOpen ? 'w-60' : 'w-16'
-        } p-4 flex flex-col`}
+        className={`bg-gray-900 text-white transition-all duration-300 ${isOpen ? 'w-60' : 'w-16'
+          } p-4 flex flex-col`}
       >
         <button onClick={() => setIsOpen(!isOpen)} className="text-white mb-6">
           {isOpen ? <X /> : <Menu />}
@@ -109,7 +117,7 @@ export default function Dashboard() {
             <span>Help</span>
             <span>Notifications</span>
             <span>Messages</span>
-            <span>bilalpt572@gmail.com</span>
+            <span>{userEmail}</span>
           </div>
         </header>
 

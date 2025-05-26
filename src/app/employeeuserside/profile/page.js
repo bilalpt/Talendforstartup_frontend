@@ -10,6 +10,7 @@ export default function ProfilePage() {
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [resumeData, setResumeData] = useState(null);
+  const [qualificationExists, setQualificationExists] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -64,7 +65,25 @@ export default function ProfilePage() {
         }
       })
       .catch((err) => console.error('Error fetching resume:', err));
-  }, [router]); // ✅ Fixed dependency warning
+
+    // Fetch qualification data
+    fetch(`https://talent4startup.onrender.com/users/user-qualification/${userId}`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error('Failed to fetch qualification data');
+        return res.json();
+      })
+      .then((data) => {
+        if (data && Object.keys(data).length > 0) {
+          setQualificationExists(true);
+        }
+      })
+      .catch((err) => console.error('Error fetching qualification:', err));
+  }, [router]);
 
   if (!user) {
     return (
@@ -147,8 +166,12 @@ export default function ProfilePage() {
               {[
                 {
                   title: 'Qualifications',
-                  description: 'Highlight your skills and experience.',
-                  path: '/employeeuserside/qualificationform',
+                  description: qualificationExists
+                    ? 'Edit your qualifications and experience.'
+                    : 'Highlight your skills and experience.',
+                  path: qualificationExists
+                    ? 'qualificationform/editqualificationform'
+                    : '/employeeuserside/qualificationform',
                 },
                 {
                   title: 'Job Preferences',

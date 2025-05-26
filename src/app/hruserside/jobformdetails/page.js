@@ -90,7 +90,7 @@ export default function JobFormDetails() {
   return (
     <div className="min-h-screen bg-[#f9f9f9] flex">
       {/* Sidebar */}
-      <div className="w-full md:w-1/4 lg:w-1/5 px-0 py-0 bg-white border-r border-gray-200 p-4 sticky top-0 h-screen hidden md:block">
+      <div className="w-full md:w-1/4 lg:w-1/5 px-0 py-0  p-4 sticky top-0 h-screen hidden md:block">
         <Sidebar />
       </div>
 

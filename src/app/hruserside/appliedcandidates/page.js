@@ -116,7 +116,7 @@ const Appliedcandidates = () => {
   return (
     <div className="flex">
       {/* Sidebar */}
-      <div className="w-1/4">
+      <div className="w-full md:w-1/4 lg:w-1/5 px-0 py-0 bg-white border-r border-gray-200 p-4 sticky top-0 h-screen hidden md:block">
         <Sidebar />
       </div>
 

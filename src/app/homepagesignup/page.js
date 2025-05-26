@@ -20,8 +20,9 @@ export default function SignupPage() {
       return;
     }
 
-    try {
-      setStatus('loading');
+    try {      
+      
+      setStatus('loading');      
       const response = await fetch('https://talent4startup.onrender.com/auth/register', {
         method: 'POST',
         headers: {
@@ -29,6 +30,7 @@ export default function SignupPage() {
         },
         body: JSON.stringify({ email, purpose: 'register' }),
       });
+      console.log(response, 'this iffdss email');
 
       const data = await response.json();
       console.log(data, 'this is email');

@@ -131,9 +131,9 @@ export default function CVUploader() {
             </ul>
           </div>
 
-          <button className="mt-6 text-red-600 hover:text-red-800 font-medium underline transition">
+          {/* <button className="mt-6 text-red-600 hover:text-red-800 font-medium underline transition">
             View full job description
-          </button>
+          </button> */}
         </div>
       </div>
 

@@ -12,8 +12,6 @@ export default function QualificationsForm() {
     cert: { name: '', org: '' },
     languages: [],
   });
-  console.log(formData, 'this is the quali');
-
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -62,12 +60,40 @@ export default function QualificationsForm() {
     }
   };
 
+  const validateForm = () => {
+    const { education, skills, cert, languages } = formData;
+
+    if (!education.degree || !education.institution || !education.year) {
+      alert('Please fill in all education fields.');
+      return false;
+    }
+
+    if (skills.length === 0) {
+      alert('Please add at least one skill.');
+      return false;
+    }
+
+    if (!cert.name || !cert.org) {
+      alert('Please fill in both certificate name and organization.');
+      return false;
+    }
+
+    if (languages.length === 0) {
+      alert('Please select at least one language.');
+      return false;
+    }
+
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const userId = localStorage.getItem('userId'); // Ensure the userId is saved in localStorage
+    if (!validateForm()) return;
+
+    const userId = localStorage.getItem('userId');
     const payload = {
-      userId: userId,  // Pass userId here
+      userId: userId,
       education: formData.education,
       skill: formData.skills,
       cert: formData.cert,
@@ -87,6 +113,7 @@ export default function QualificationsForm() {
       if (!res.ok) throw new Error('Failed to update');
 
       alert('Form updated successfully!');
+      router.push('/'); // Navigate to home page after submission
     } catch (err) {
       console.error('Error submitting form:', err);
       alert('Update failed. Check console for details.');
@@ -169,7 +196,7 @@ export default function QualificationsForm() {
 
         <div className="text-center">
           <button
-            onClick={() => router.push('/')}
+            type="submit"
             className="bg-[#CD0A1A] hover:bg-[#a50915] text-white font-semibold py-3 px-10 rounded-md transition duration-300 shadow-sm"
           >
             Submit
