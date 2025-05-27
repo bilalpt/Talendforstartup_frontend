@@ -17,7 +17,42 @@ import { useRouter } from 'next/navigation';
 
 export default function Sidebar() {
     const [isOpen, setIsOpen] = useState(true);
-      const router = useRouter();
+     const [tokenChecked, setTokenChecked] = useState(false);
+  const [userEmail, setUserEmail] = useState('');
+    const router = useRouter();
+
+
+
+    // ✅ Token check
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        const email = localStorage.getItem('userEmail');
+
+        if (email) {
+            setUserEmail(email);
+        }
+        if (!token) {
+            router.push('/homepagesignup');
+        } else {
+            setTokenChecked(true);
+        }
+    }, [router]);
+
+    if (!tokenChecked) {
+        return (
+            <div className="flex items-center justify-center min-h-screen text-xl">
+                Checking authentication...
+            </div>
+        );
+    }
+
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("userEmail");
+        localStorage.removeItem("userId");
+        // Redirect using router.push instead of window.location.href for SPA navigation
+        router.push("/homepagesignup");
+    };
 
 
 
@@ -28,8 +63,9 @@ export default function Sidebar() {
         { icon: <Phone />, label: 'Phone Calls', path: '/hruserside/phonecalls' },
         { icon: <Search />, label: 'Smart Sourcing', path: '/hruserside/smartsourcing' },
         { icon: <Calendar />, label: 'Interviews', path: '/hruserside/interviews' },
-        { icon: <BarChart2 />, label: 'Analytics', path: '/hruserside/analytics' },
-        { icon: <FolderPlus />, label: 'Tools', path: '/hruserside/tools' },
+        { icon: <BarChart2 />, label: 'Back to User home', path: 'http://localhost:3000/' },
+        { icon: <FolderPlus />, label: 'Log out', action: handleLogout },
+
     ];
 
     return (
@@ -76,4 +112,5 @@ export default function Sidebar() {
                 </ul>
             </aside>
         </div>
-        )}
+    )
+}

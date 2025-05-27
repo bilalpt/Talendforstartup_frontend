@@ -20,7 +20,6 @@ export default function Dashboard() {
   const [isOpen, setIsOpen] = useState(true);
   const [tokenChecked, setTokenChecked] = useState(false);
   const [userEmail, setUserEmail] = useState('');
-  
 
   const router = useRouter();
 
@@ -39,7 +38,6 @@ export default function Dashboard() {
     }
   }, [router]);
 
-
   if (!tokenChecked) {
     return (
       <div className="flex items-center justify-center min-h-screen text-xl">
@@ -48,15 +46,23 @@ export default function Dashboard() {
     );
   }
 
-  // ✅ Updated nav items with redirect paths
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userEmail");
+    localStorage.removeItem("userId");
+    // Redirect using router.push instead of window.location.href for SPA navigation
+    router.push("/homepagesignup");
+  };
+
+  // ✅ Updated nav items with redirect paths and action for logout
   const navItems = [
     { icon: <Briefcase />, label: 'Posted Jobs', path: '/hruserside/jobformdetails' },
     { icon: <Users />, label: 'Candidates', path: '/hruserside/appliedcandidates' },
     { icon: <Phone />, label: 'Phone Calls', path: '/hruserside/phonecalls' },
     { icon: <Search />, label: 'Smart Sourcing', path: '/hruserside/smartsourcing' },
     { icon: <Calendar />, label: 'Interviews', path: '/hruserside/interviews' },
-    { icon: <BarChart2 />, label: 'Analytics', path: '/hruserside/analytics' },
-    { icon: <FolderPlus />, label: 'Tools', path: '/hruserside/tools' },
+    { icon: <BarChart2 />, label: 'Back to User home', path: 'http://localhost:3000/' },
+    { icon: <FolderPlus />, label: 'Log out', action: handleLogout },
   ];
 
   return (
@@ -89,7 +95,9 @@ export default function Dashboard() {
             <li
               key={i}
               onClick={() => {
-                if (item.path) {
+                if (item.action) {
+                  item.action(); // Run logout function if present
+                } else if (item.path) {
                   router.push(item.path);
                 }
               }}

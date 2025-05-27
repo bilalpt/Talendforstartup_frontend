@@ -11,8 +11,9 @@ import {
 import Image from 'next/image';
 
 const Navbar = () => {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  
   const [menuOpen, setMenuOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -31,14 +32,14 @@ const Navbar = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-const handleLogout = () => {
-  localStorage.removeItem("token");
-  localStorage.removeItem("userEmail");
-  localStorage.removeItem("userId");
-  setIsLoggedIn(false);
-  setDropdownOpen(false);
-  window.location.href = "/homepagesignup";
-};
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userEmail");
+    localStorage.removeItem("userId");
+    setIsLoggedIn(false);
+    setDropdownOpen(false);
+    window.location.href = "/homepagesignup";
+  };
 
 
   return (

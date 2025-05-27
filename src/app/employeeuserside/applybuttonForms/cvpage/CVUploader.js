@@ -9,13 +9,20 @@ export default function CVUploader() {
   const [existingCv, setExistingCv] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [jobId, setJobId] = useState(null);
+
   const router = useRouter();
   const searchParams = useSearchParams();
-  const jobId = searchParams.get('jobId');
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId');
+
+    const param = searchParams.get('jobId');
+    if (param) {
+      setJobId(param);
+    }
 
     if (!token) {
       router.push('/homepagesignup');
@@ -38,7 +45,11 @@ export default function CVUploader() {
           });
       }
     }
-  }, [router]);
+
+    return () => {
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+    };
+  }, [router, searchParams]);
 
   const handleCvUpload = (e) => {
     const file = e.target.files[0];
@@ -46,7 +57,7 @@ export default function CVUploader() {
     setPreviewUrl(URL.createObjectURL(file));
   };
 
-  const handleSubmit = async () => {
+  const handleModalConfirm = async () => {
     const fileToSubmit = cvFile || existingCv;
 
     if (!fileToSubmit) {
@@ -78,13 +89,15 @@ export default function CVUploader() {
       router.push(`/employeeuserside/applybuttonForms/experienceform?jobId=${jobId}`);
     } catch (error) {
       alert(`❌ Error: ${error.message}`);
+    } finally {
+      setIsModalOpen(false);
     }
   };
 
   if (!isAuthenticated) return null;
 
   return (
-    <div className="min-h-screen bg-red-50 py-12 px-4 flex flex-col items-center">
+    <div className="min-h-screen bg-red-50 py-12 px-4 flex flex-col items-center relative">
       <h1 className="text-4xl font-bold text-red-800 mb-8 text-center">Upload Your CV</h1>
 
       <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -130,21 +143,40 @@ export default function CVUploader() {
               <li>Familiarity with REST APIs and databases.</li>
             </ul>
           </div>
-
-          {/* <button className="mt-6 text-red-600 hover:text-red-800 font-medium underline transition">
-            View full job description
-          </button> */}
         </div>
       </div>
 
       {/* Submit Button */}
       <button
-        onClick={handleSubmit}
+        onClick={() => setIsModalOpen(true)}
         className="mt-10 flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-full text-lg font-semibold transition cursor-pointer"
       >
-        <ArrowUpTrayIcon className="w-5 h-5 cursor-pointer" />
+        <ArrowUpTrayIcon className="w-5 h-5" />
         Submit CV
       </button>
+
+      {/* Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
+          <div className="bg-white p-6 rounded-2xl max-w-sm w-full text-center shadow-xl">
+            <h3 className="text-xl font-semibold text-red-700 mb-4">Are you sure you want to submit?</h3>
+            <div className="flex justify-center gap-4">
+              <button
+                onClick={handleModalConfirm}
+                className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition"
+              >
+                Yes
+              </button>
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="bg-gray-300 text-gray-800 px-6 py-2 rounded-lg hover:bg-gray-400 transition"
+              >
+                No
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
