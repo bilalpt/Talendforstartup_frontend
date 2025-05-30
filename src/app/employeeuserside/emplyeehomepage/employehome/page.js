@@ -17,6 +17,9 @@ const EmployeHome = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [locationQuery, setLocationQuery] = useState("");
 
+  console.log(jobList, 'this is hadhi');
+
+
 
 
   useEffect(() => {
@@ -157,30 +160,35 @@ const EmployeHome = () => {
                     setMobileDetailOpen(true);
                   }}
                   className={`relative ml-8 mb-6 p-4 bg-white shadow-lg rounded-xl transition duration-300 cursor-pointer border-l-4 ${selectedJob?._id === job._id ? "border-red-500" : "border-transparent"
-                    } hover:shadow-xl`}
+                    } hover:shadow-xl`} 
                 >
-                  <div className="flex justify-between items-start">
+                  <div className="flex justify-between items-start ">
                     <div>
-                      <p className="font-semibold text-[#555454]">{job.companyName}</p>
-                      <p className="font-bold">{job.jobTitle}</p>
-                      <p className="text-sm text-gray-600">{job.city} ({job.locationType})</p>
-                      <p className="text-sm text-gray-600">{job.streetAddress}</p>
-                      <p className="text-sm text-gray-600">{job.area}</p>
-                      <p className="text-sm text-gray-600">{job.pincode}</p>
-                      <p className="text-sm text-gray-600">Salary: ₹{job.salary}</p>
-                      {applied && (
-                        <span className="text-green-600 text-xs font-semibold mt-2 inline-block">
-                          ✅ Already Applied
-                        </span>
-                      )}
+                      <p className="font-semibold text-xl text-red-800">{job.jobTitle}</p>
+                      <p className="font-bold text-[#555454] pt-3">{job.companyName}</p>
+                      <p className="text-sm text-gray-600 pt-1">
+                        {job.city} ({job.locationType})
+                      </p>
+                      <h2 className="pt-2 font-medium">Job Description</h2>
+                      <p className="text-sm text-gray-600 pt-1 line-clamp-3">
+                        {job.jobDescription}
+                      </p>
                     </div>
+
                     <div className="text-sm text-gray-400 pr-6">
                       {new Date(job.createdAt).toLocaleDateString()}
                     </div>
                   </div>
 
+                  {applied && (
+                    <span className="absolute bottom-3 right-4 text-green-600 text-xs font-semibold">
+                      ✅ Already Applied
+                    </span>
+                  )}
+
                   <Bookmark className="absolute top-5 right-3 w-4 h-4 text-gray-400" />
                 </div>
+
               );
             })
           )}
@@ -189,15 +197,16 @@ const EmployeHome = () => {
 
 
         {/* Desktop Job Detail */}
-        <div className="hidden md:block w-2/3 bg-[#ffffff] rounded-lg shadow p-6 overflow-y-auto mr-48  shadow-2xl">
+        <div className="hidden md:block w-2/3 bg-[#ffffff] rounded-lg  p-6 overflow-y-auto mr-48  shadow-2xl">
           {selectedJob && (
             <>
               <div className="flex justify-between items-start">
                 <div>
                   <h2 className="text-2xl font-bold mt-2 text-[#CD0A1A]">{selectedJob.jobTitle}</h2>
-                  <p className="text-sm text-gray-600">{selectedJob.city} · ₹{selectedJob.salary}</p>
+                  <p className="text-sm text-gray-600">Salary · ₹{selectedJob.salary}</p>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 ">
+                  <h2>{new Date(selectedJob.createdAt).toLocaleDateString()}</h2>
                   <MoreVertical className="text-gray-500" />
                   <Bookmark className="text-gray-500" />
                   {isJobApplied(selectedJob._id) ? (
@@ -217,14 +226,18 @@ const EmployeHome = () => {
               </div>
 
               <div className="mt-4 space-y-1 text-sm text-gray-700">
-                <p><strong>Company:</strong> {selectedJob.companyName}</p>
-                <p><strong>Location:</strong> {selectedJob.city} ({selectedJob.locationType})</p>
-                <p><strong>Street:</strong> {selectedJob.streetAddress}</p>
+                <p><strong>Company :</strong> {selectedJob.companyName}</p>
+                <p><strong>Location :</strong> {selectedJob.city} ({selectedJob.locationType})</p>
+                <p><strong>Job Type :</strong> {selectedJob.jobType}</p>
                 <p><strong>Salary:</strong> ₹{selectedJob.salary}</p>
               </div>
 
               <div className="mt-6">
-                <h3 className="font-semibold mb-2 text-[#555454]">Job Description:</h3>
+                <h3 className="font-semibold mb-2 text-[#555454]">Company Description:</h3>
+                <p className="text-sm text-gray-700 whitespace-pre-line">
+                  {selectedJob.jobDescription || "No description available."}
+                </p>
+                <h3 className="font-semibold mb-2 text-[#555454] pt-4">Job Description:</h3>
                 <p className="text-sm text-gray-700 whitespace-pre-line">
                   {selectedJob.jobDescription || "No description available."}
                 </p>
@@ -239,7 +252,7 @@ const EmployeHome = () => {
             <div className="flex justify-between items-start">
               <div>
                 <h2 className="text-xl font-bold mt-2 text-[#CD0A1A]">{selectedJob.jobTitle}</h2>
-                <p className="text-sm text-gray-600">{selectedJob.city} · ₹{selectedJob.salary}</p>
+                <p className="text-sm text-gray-600">Salary : ₹{selectedJob.salary}</p>
               </div>
               <X className="text-gray-500 w-6 h-6 cursor-pointer" onClick={() => setMobileDetailOpen(false)} />
             </div>
