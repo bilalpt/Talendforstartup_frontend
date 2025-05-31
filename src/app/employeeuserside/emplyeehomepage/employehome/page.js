@@ -160,7 +160,7 @@ const EmployeHome = () => {
                     setMobileDetailOpen(true);
                   }}
                   className={`relative ml-8 mb-6 p-4 bg-white shadow-lg rounded-xl transition duration-300 cursor-pointer border-l-4 ${selectedJob?._id === job._id ? "border-red-500" : "border-transparent"
-                    } hover:shadow-xl`} 
+                    } hover:shadow-xl`}
                 >
                   <div className="flex justify-between items-start ">
                     <div>
@@ -235,7 +235,7 @@ const EmployeHome = () => {
               <div className="mt-6">
                 <h3 className="font-semibold mb-2 text-[#555454]">Company Description:</h3>
                 <p className="text-sm text-gray-700 whitespace-pre-line">
-                  {selectedJob.jobDescription || "No description available."}
+                  {selectedJob.companyDescription || "No description available."}
                 </p>
                 <h3 className="font-semibold mb-2 text-[#555454] pt-4">Job Description:</h3>
                 <p className="text-sm text-gray-700 whitespace-pre-line">
@@ -260,8 +260,17 @@ const EmployeHome = () => {
             <div className="mt-4 space-y-2 text-sm text-gray-700">
               <p><strong>Company:</strong> {selectedJob.companyName}</p>
               <p><strong>Location:</strong> {selectedJob.city} ({selectedJob.locationType})</p>
-              <p><strong>Street:</strong> {selectedJob.streetAddress}</p>
               <p><strong>Salary:</strong> ₹{selectedJob.salary}</p>
+
+
+              <div className="mt-4">
+                <h3 className="font-semibold mb-2 text-[#555454]">Company Description:</h3>
+                <p className="text-sm text-gray-700 whitespace-pre-line">
+                  {selectedJob.companyDescription || "No description available."}
+                </p>
+              </div>
+
+
             </div>
 
             <div className="mt-4">
