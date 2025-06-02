@@ -16,11 +16,10 @@ const EmployeHome = () => {
   const [qualification, setQualification] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [locationQuery, setLocationQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const jobsPerPage = 5;
 
   console.log(jobList, 'this is hadhi');
-
-
-
 
   useEffect(() => {
     const storedUserId = localStorage.getItem("userId");
@@ -46,9 +45,7 @@ const EmployeHome = () => {
       }
     };
 
-
     fetchJobData();
-
   }, [userId]);
 
   useEffect(() => {
@@ -113,6 +110,16 @@ const EmployeHome = () => {
     return searchMatch && locationMatch;
   });
 
+  // Pagination Logic
+  const totalPages = Math.ceil(filteredJobs.length / jobsPerPage);
+  const indexOfLastJob = currentPage * jobsPerPage;
+  const indexOfFirstJob = indexOfLastJob - jobsPerPage;
+  const currentJobs = filteredJobs.slice(indexOfFirstJob, indexOfLastJob);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
   if (loading) return <div>Loading...</div>;
 
   return (
@@ -147,10 +154,10 @@ const EmployeHome = () => {
       <div className="flex flex-col md:flex-row flex-grow p-4 gap-4 overflow-hidden shadow-2xl">
         {/* Job List */}
         <div className="w-full md:w-2/5 md:ml-40 overflow-y-auto overflow-x-hidden pr-2 relative">
-          {filteredJobs.length === 0 ? (
+          {currentJobs.length === 0 ? (
             <p className="text-center text-gray-500">No jobs found matching your search.</p>
           ) : (
-            filteredJobs.slice().reverse().map((job, index) => {
+            currentJobs.slice().reverse().map((job, index) => {
               const applied = isJobApplied(job._id);
               return (
                 <div
@@ -159,8 +166,9 @@ const EmployeHome = () => {
                     setSelectedJob(job);
                     setMobileDetailOpen(true);
                   }}
-                  className={`relative ml-8 mb-6 p-4 bg-white shadow-lg rounded-xl transition duration-300 cursor-pointer border-l-4 ${selectedJob?._id === job._id ? "border-red-500" : "border-transparent"
-                    } hover:shadow-xl`}
+                  className={`relative ml-8 mb-6 p-4 bg-white shadow-lg rounded-xl transition duration-300 cursor-pointer border-l-4 ${
+                    selectedJob?._id === job._id ? "border-red-500" : "border-transparent"
+                  } hover:shadow-xl`}
                 >
                   <div className="flex justify-between items-start ">
                     <div>
@@ -188,13 +196,29 @@ const EmployeHome = () => {
 
                   <Bookmark className="absolute top-5 right-3 w-4 h-4 text-gray-400" />
                 </div>
-
               );
             })
           )}
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex justify-center mt-4 space-x-2">
+              {[...Array(totalPages)].map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => handlePageChange(i + 1)}
+                  className={`px-3 py-1 rounded ${
+                    currentPage === i + 1
+                      ? "bg-[#CD0A1A] text-white"
+                      : "bg-gray-300 text-gray-700 hover:bg-gray-400"
+                  }`}
+                >
+                  {i + 1}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
-
-
 
         {/* Desktop Job Detail */}
         <div className="hidden md:block w-2/3 bg-[#ffffff] rounded-lg  p-6 overflow-y-auto mr-48  shadow-2xl">
@@ -214,11 +238,11 @@ const EmployeHome = () => {
                       Already Applied
                     </button>
                   ) : qualification !== null ? (
-                    <button onClick={handleApply} className="px-4 py-2 rounded-md bg-[#CD0A1A] text-white">
+                    <button onClick={handleApply} className="px-4 py-2 rounded-md bg-[#CD0A1A] text-white cursor-pointer">
                       Apply on employer site
                     </button>
                   ) : (
-                    <button onClick={() => router.push('/employeeuserside/qualificationform')} className="px-4 py-2 rounded-md bg-[#CD0A1A] text-white">
+                    <button onClick={() => router.push('/employeeuserside/qualificationform')} className="px-4 py-2 rounded-md bg-[#CD0A1A] text-white cursor-pointer">
                       Apply on employer site
                     </button>
                   )}
@@ -286,7 +310,7 @@ const EmployeHome = () => {
                   Already Applied
                 </button>
               ) : qualification !== null ? (
-                <button onClick={handleApply} className="w-full px-4 py-2 rounded-md bg-[#CD0A1A] text-white">
+                <button onClick={handleApply} className="w-full px-4 py-2 rounded-md bg-[#CD0A1A] text-white ">
                   Apply on employer site
                 </button>
               ) : (
