@@ -97,6 +97,7 @@ export default function CVUploader() {
   if (!isAuthenticated) return null;
 
   return (
+    //cv page
     <div className="min-h-screen bg-red-50 py-12 px-4 flex flex-col items-center relative">
       <h1 className="text-4xl font-bold text-red-800 mb-8 text-center">Upload Your CV</h1>
 
