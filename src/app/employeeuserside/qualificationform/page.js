@@ -128,7 +128,7 @@ export default function QualificationsForm() {
   ];
 
   return (
-    //qualification form 
+    //qualification forms
     <section className="max-w-3xl mx-auto my-12 p-8 sm:p-10 bg-white border border-gray-300 shadow-2xl rounded-lg">
       <h1 className="text-3xl sm:text-4xl font-semibold text-center text-[#CD0A1A] mb-10">
         Qualifications Form
