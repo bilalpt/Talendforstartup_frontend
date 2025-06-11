@@ -188,9 +188,9 @@ export default function CVUploader() {
         </div>
       )}
 
-      {/* Modal Confirmation */}
+      {/* Confirmation Modal with Blur */}
       {isModalOpen && (
-        <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-2xl max-w-sm w-full text-center shadow-2xl border border-red-100 animate-fade-in">
             <h3 className="text-xl font-semibold text-red-700 mb-4">Are you sure you want to submit?</h3>
             <div className="flex justify-center gap-4">
@@ -211,9 +211,9 @@ export default function CVUploader() {
         </div>
       )}
 
-      {/* Success Modal */}
+      {/* Success Modal with Blur */}
       {showSuccessModal && (
-        <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50">
           <div className="bg-white p-8 rounded-2xl max-w-md w-full text-center shadow-2xl border border-green-100 animate-fade-in">
             <div className="text-green-500 text-5xl mb-4">✅</div>
             <h2 className="text-2xl font-bold text-gray-800 mb-2">CV Uploaded Successfully!</h2>

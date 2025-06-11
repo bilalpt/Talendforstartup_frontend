@@ -1,8 +1,47 @@
-'use client'; // Ensure this is a client component
+'use client';
 
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
+import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/outline';
+
+// ✅ Beautiful Modal Component
+function Modal({ message, onClose }) {
+  const isSuccess = message.toLowerCase().includes('success');
+
+  return (
+    <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50">
+      <motion.div
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.2 }}
+        className="bg-white rounded-2xl shadow-2xl p-6 max-w-sm w-full mx-4"
+      >
+        <div className="flex items-start space-x-3">
+          {isSuccess ? (
+            <CheckCircleIcon className="w-8 h-8 text-green-500 mt-1" />
+          ) : (
+            <XCircleIcon className="w-8 h-8 text-red-500 mt-1" />
+          )}
+          <div>
+            <h3 className="text-lg font-semibold text-gray-800 mb-1">
+              {isSuccess ? 'Success' : 'Notice'}
+            </h3>
+            <p className="text-gray-600 text-sm">{message}</p>
+          </div>
+        </div>
+        <div className="mt-6 text-right">
+          <button
+            onClick={onClose}
+            className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition"
+          >
+            OK
+          </button>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
 
 export default function ExperienceFormClient() {
   const router = useRouter();
@@ -11,11 +50,11 @@ export default function ExperienceFormClient() {
   const [years, setYears] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userId, setUserId] = useState('');
+  const [modalMessage, setModalMessage] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const searchParams = useSearchParams();
   const jobId = searchParams.get('jobId');
-  console.log(jobId,'this is the jobid hello');
-  
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -30,16 +69,12 @@ export default function ExperienceFormClient() {
 
   const handleContinue = async () => {
     if (!title || !company || !years) {
-      alert('Please fill in all the required fields');
+      setModalMessage('Please fill in all the required fields');
+      setIsModalOpen(true);
       return;
     }
 
-    const payload = {
-      userId,
-      title,
-      company,
-      years,
-    };
+    const payload = { userId, title, company, years };
 
     try {
       const response = await fetch('https://talent4startup.onrender.com/users/user-experience', {
@@ -51,13 +86,18 @@ export default function ExperienceFormClient() {
       const data = await response.json();
 
       if (response.ok) {
-        alert('Experience submitted successfully!');
-        router.push(`/employeeuserside/applybuttonForms/submitpage?jobId=${jobId}`);
+        setModalMessage('Experience submitted successfully!');
+        setIsModalOpen(true);
+        setTimeout(() => {
+          router.push(`/employeeuserside/applybuttonForms/submitpage?jobId=${jobId}`);
+        }, 1500);
       } else {
-        alert('Error: ' + (data.message || 'Something went wrong'));
+        setModalMessage('Error: ' + (data.message || 'Something went wrong'));
+        setIsModalOpen(true);
       }
     } catch (error) {
-      alert('Network error: ' + error.message);
+      setModalMessage('Network error: ' + error.message);
+      setIsModalOpen(true);
     }
   };
 
@@ -68,11 +108,11 @@ export default function ExperienceFormClient() {
       initial={{ opacity: 0, y: 40 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="min-h-screen bg-white flex flex-col lg:flex-row justify-center items-center p-6 gap-10"
+      className="min-h-screen bg-white flex flex-col lg:flex-row justify-center items-center p-6 gap-10 relative"
     >
       {/* Left form section */}
       <div className="flex-1 max-w-xl w-full">
-        <h1 className=" font-bold mb-4">
+        <h1 className="font-bold mb-4">
           Enter a past job that shows relevant experience
         </h1>
         <p className="font-semibold text-gray-700 mb-2">
@@ -158,6 +198,14 @@ export default function ExperienceFormClient() {
           View full job description <span className="text-lg">▾</span>
         </button>
       </motion.div>
+
+      {/* Modal Display */}
+      {isModalOpen && (
+        <Modal
+          message={modalMessage}
+          onClose={() => setIsModalOpen(false)}
+        />
+      )}
     </motion.div>
   );
 }
