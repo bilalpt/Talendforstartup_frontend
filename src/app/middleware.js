@@ -21,6 +21,8 @@ export const config = {
     '/hruserside/employeeaccountsecond',
     '/hruserside/jobformdetails',
     '/hruserside/jobsectionpage',
+        '/hruserside/jobsectionpage',
+
 
 
   ], 
