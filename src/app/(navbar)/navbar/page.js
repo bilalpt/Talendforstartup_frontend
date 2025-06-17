@@ -124,7 +124,7 @@ const Navbar = () => {
         <div className="md:hidden mt-4 space-y-4">
           <NavLink className='block text-[#CD0A1A]' href="/employeeuserside/emplyeehomepage/employehome">Home</NavLink>
           <NavLink className='block text-[#CD0A1A]' href="/employeeuserside/companyreviews">Company reviews</NavLink>
-          <NavLink className='block text-[#CD0A1A]' href="/salary-guide">Saved Jobs</NavLink>
+          <NavLink className='block text-[#CD0A1A]' href="/employeeuserside/savedjobs">Saved Jobs</NavLink>
           <div className="flex items-center gap-4 mt-4">
             {!isLoggedIn ? (
               <NavLink className='text-[#CD0A1A]' href="/homepagesignup">Sign in</NavLink>
